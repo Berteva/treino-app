@@ -6,11 +6,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0c0c0c">
+<meta name="color-scheme" content="dark">
 <title>Força & Performance</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #0c0c0c;
+  color-scheme: dark;
   --surface: #161616;
   --surface2: #1e1e1e;
   --surface3: #252525;
@@ -30,7 +33,7 @@
 }
 
 - { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; overflow: hidden; }
+  html, body { height: 100%; overflow: hidden; background-color: #0c0c0c; }
 
 body {
 background: var(–bg);
@@ -328,6 +331,19 @@ margin-top: 10px;
 padding: 6px 0;
 }
 .rest-dot { width: 6px; height: 6px; background: var(–accent); border-radius: 50%; }
+.yt-btn {
+display: inline-flex; align-items: center; gap: 6px;
+margin-top: 10px;
+background: rgba(255,0,0,0.1);
+border: 1px solid rgba(255,0,0,0.25);
+color: #ff5555;
+border-radius: 20px; padding: 7px 14px;
+font-family: ‘DM Sans’, sans-serif;
+font-size: 12px; font-weight: 600;
+cursor: pointer; text-decoration: none;
+letter-spacing: 0.5px; transition: background .15s;
+}
+.yt-btn:active { background: rgba(255,0,0,0.2); }
 
 /* ── TIMER ── */
 .timer-bar {
@@ -763,6 +779,58 @@ const PROGRAM = {
 };
 
 // ══════════════════════════════════════════
+// ══════════════════════════════════════════
+// YOUTUBE SEARCH QUERIES
+// ══════════════════════════════════════════
+const YT_QUERIES = {
+  'bench':        'supino barra execução correta musculação',
+  'ohp':          'desenvolvimento halteres ombro execução correta',
+  'incline-fly':  'crucifixo inclinado halteres execução',
+  'tricep-push':  'tríceps pulley corda execução correta',
+  'plank-reach':  'prancha alcance alternado anti rotação core',
+  'dead-bug':     'dead bug exercício core lombar',
+  'squat':        'agachamento barra execução correta musculação',
+  'leg-press':    'leg press 45 execução correta',
+  'bulgarian':    'agachamento búlgaro halteres execução',
+  'calf':         'panturrilha em pé máquina execução',
+  'hollow':       'hollow body hold core execução',
+  'hip-thrust-bw':'hip thrust peso corporal glúteo execução',
+  'pullup':       'barra fixa execução correta pull up',
+  'row-bar':      'remada barra pronada execução correta',
+  'row-db':       'remada unilateral halter execução',
+  'curl':         'rosca direta barra EZ execução correta',
+  'face-pull':    'face pull corda pulley execução',
+  'side-plank':   'prancha lateral elevação quadril oblíquo',
+  'pallof':       'pallof press anti rotação pulley execução',
+  'deadlift':     'levantamento terra execução correta iniciante',
+  'rdl':          'romanian deadlift RDL isquiotibial execução',
+  'hip-thrust':   'hip thrust barra glúteo execução correta',
+  'leg-curl':     'leg curl deitado isquiotibial execução',
+  'ab-wheel':     'ab wheel rollout roda abdominal execução',
+  'copenhagen':   'copenhagen plank adutor core execução',
+  'breath':       'respiração diafragmática exercício técnica',
+  'spinal-rot':   'rotação coluna deitado mobilidade',
+  'hip-90':       '90 90 mobilidade quadril exercício',
+  'cat-cow':      'cat cow coluna mobilidade yoga',
+  'hamstring':    'alongamento isquiotibial deitado técnica',
+  'figure4':      'alongamento figura 4 piriforme glúteo',
+  'psoas':        'alongamento psoas flexor quadril cavaleiro',
+  'lunge-twist':  'afundo rotação alongamento quadril',
+  'legs-wall':    'pernas na parede recuperação viparita',
+  'zone2-main':   'treino zona 2 cardio aeróbico como fazer',
+  'hiit-4x4':     'protocolo 4x4 norueguês HIIT intervalo',
+  'mobility-wed': 'mobilidade quadril tornozelo torácica exercício',
+  'warmup-hiit':  'aquecimento cardio corrida esteira técnica',
+  'cooldown-hiit':'cool down recuperação cardio técnica',
+};
+
+function openYT(exId) {
+  const q = YT_QUERIES[exId] || 'execução exercício musculação';
+  const url = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+  window.open(url, '_blank');
+}
+
+// ══════════════════════════════════════════
 // STATE & STORAGE
 // ══════════════════════════════════════════
 let currentWorkout = null;
@@ -944,6 +1012,9 @@ function buildExCard(ex, num) {
       </div>
       ${buildSetRows(ex)}
       ${ex.rest ? `<div class="rest-badge"><div class="rest-dot"></div>Descanso: ${fmtSecs(ex.rest)} após cada série</div>` : ''}
+      <div style="padding-top:4px;">
+        <button class="yt-btn" onclick="openYT('${ex.id}')">▶ Ver execução no YouTube</button>
+      </div>
     </div>`;
 
   return card;
