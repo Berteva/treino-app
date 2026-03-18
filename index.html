@@ -643,6 +643,24 @@ function toggleSet(exId,idx,rest){
 
 function findEx(id){ for(const w of[...PROGRAM.strength,...PROGRAM.cardio]){ const e=w.exercises.find(x=>x.id===id); if(e) return e; } return null; }
 
+function playBeeps(){
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.18, 0.36].forEach(function(t){
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0, ctx.currentTime + t);
+      gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + t + 0.01);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + t + 0.12);
+      osc.start(ctx.currentTime + t);
+      osc.stop(ctx.currentTime + t + 0.13);
+    });
+  } catch(e) {}
+}
+
 function startRestTimer(sec){
   clearInterval(restTimer);
   restTotalSec=sec; restEndTime=Date.now()+sec*1000;
@@ -652,7 +670,7 @@ function startRestTimer(sec){
     const remaining=Math.max(0,Math.round((restEndTime-Date.now())/1000));
     disp.textContent=fmtSecs(remaining);
     prog.style.width=(remaining/restTotalSec*100)+'%';
-    if(remaining<=0){ clearInterval(restTimer); restTimer=null; restEndTime=null; bar.classList.remove('active'); if(navigator.vibrate) navigator.vibrate([200,100,200]); showToast('Descanso concluído! 💪'); }
+    if(remaining<=0){ clearInterval(restTimer); restTimer=null; restEndTime=null; bar.classList.remove('active'); playBeeps(); if(navigator.vibrate) navigator.vibrate([200,100,200]); showToast('Descanso concluído! 💪'); }
   }
   tick();
   restTimer=setInterval(tick,500);
@@ -753,7 +771,7 @@ document.addEventListener('visibilitychange', function(){
     if(remaining<=0){
       clearInterval(restTimer); restTimer=null; restEndTime=null;
       bar.classList.remove('active');
-      if(navigator.vibrate) navigator.vibrate([200,100,200]);
+      playBeeps(); if(navigator.vibrate) navigator.vibrate([200,100,200]);
       showToast('Descanso concluído! 💪');
     } else {
       // Reinicia o intervalo sincronizado com o tempo real
@@ -764,7 +782,7 @@ document.addEventListener('visibilitychange', function(){
         const r=Math.max(0,Math.round((restEndTime-Date.now())/1000));
         disp.textContent=fmtSecs(r);
         prog.style.width=(r/restTotalSec*100)+'%';
-        if(r<=0){ clearInterval(restTimer); restTimer=null; restEndTime=null; bar.classList.remove('active'); if(navigator.vibrate) navigator.vibrate([200,100,200]); showToast('Descanso concluído! 💪'); }
+        if(r<=0){ clearInterval(restTimer); restTimer=null; restEndTime=null; bar.classList.remove('active'); playBeeps(); if(navigator.vibrate) navigator.vibrate([200,100,200]); showToast('Descanso concluído! 💪'); }
       },500);
     }
   }
