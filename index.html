@@ -429,7 +429,7 @@ text-transform:uppercase;
   </div>
 </div>
 
-<!-- ══ PLAN ══ -->
+<!-- == PLAN == -->
 
 <div id="screen-plan" class="screen">
   <div class="topbar"><div><div class="topbar-title">Plano</div><div class="topbar-sub">Estrutura · Nutrição · Premissas</div></div></div>
@@ -463,7 +463,7 @@ text-transform:uppercase;
 <div class="toast" id="toast"></div>
 
 <script>
-// ══ WARMUP PROTOCOLS ══
+// == WARMUP PROTOCOLS ==
 var WARMUPS = {
   upper:[
     {time:'2 min',text:'Rotação de ombros — 10 círculos frente e atrás'},
@@ -491,7 +491,7 @@ var WARMUPS = {
   ]
 };
 
-// ══ PROGRAM DATA ══
+// == PROGRAM DATA ==
 var PROGRAM = {
   strength: [
     { id:'upper-a', name:'Upper A', day:'Segunda-feira', type:'upper', icon:'💪', desc:'Peito · Ombros · Tríceps · Core', exercises:[
@@ -599,7 +599,7 @@ function openYT(id) {
   window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(q), '_blank');
 }
 
-// ══ STORAGE ══
+// == STORAGE ==
 function getHistory() { try { return JSON.parse(localStorage.getItem('fp_history') || '[]'); } catch(e) { return []; } }
 function saveHistory(h) { try { localStorage.setItem('fp_history', JSON.stringify(h)); } catch(e) { showToast('Erro ao salvar'); } }
 function getPRs() { try { return JSON.parse(localStorage.getItem('fp_prs') || '{}'); } catch(e) { return {}; } }
@@ -613,7 +613,7 @@ function saveSession() {
 function clearSession() { try { localStorage.removeItem('fp_active_session'); } catch(e) {} }
 function getActiveSession() { try { return JSON.parse(localStorage.getItem('fp_active_session') || 'null'); } catch(e) { return null; } }
 
-// ══ PROGRESSION ENGINE (Safari-safe — no optional chaining, no Math.max of empty) ══
+// == PROGRESSION ENGINE (Safari-safe — no optional chaining, no Math.max of empty) ==
 function getCurrentWeek() {
   var h = getHistory();
   if (!h.length) return 1;
@@ -713,7 +713,7 @@ function detectStagnation() {
   return alerts;
 }
 
-// ══ BODY WEIGHT ══
+// == BODY WEIGHT ==
 function openBWModal() {
   document.getElementById('bw-modal').classList.add('active');
   setTimeout(function() { var el = document.getElementById('bw-input'); if (el) el.focus(); }, 300);
@@ -731,7 +731,7 @@ function saveBW() {
   document.getElementById('bw-input').value = '';
 }
 
-// ══ HOME BUILDERS ══
+// == HOME BUILDERS ==
 function buildWeekBanner() {
   var week = getCurrentWeek();
   var phase = getPhase(week);
@@ -741,14 +741,14 @@ function buildWeekBanner() {
   var deloadWarning = (week === 12) ? ' ⚠️' : '';
   var titleText = (week === 12) ? 'Semana de Deload Obrigatório' : 'Fase: ' + phase.label;
   el.innerHTML = '<div class="week-banner ' + phase.cls + '">'
-    + '<div class="wb-icon">' + phase.icon + '</div>'
+    + '<div class="wb-icon">' + phase.icon + '<\/div>'
     + '<div class="wb-info">'
-      + '<div class="wb-phase">Semana ' + week + ' de 12 · ' + phase.label + deloadWarning + '</div>'
-      + '<div class="wb-title">' + titleText + '</div>'
-      + '<div class="wb-sub">' + phase.desc + '</div>'
-      + '<div class="wb-bar"><div class="wb-fill" style="width:' + pct + '%"></div></div>'
-    + '</div>'
-  + '</div>';
+      + '<div class="wb-phase">Semana ' + week + ' de 12 · ' + phase.label + deloadWarning + '<\/div>'
+      + '<div class="wb-title">' + titleText + '<\/div>'
+      + '<div class="wb-sub">' + phase.desc + '<\/div>'
+      + '<div class="wb-bar"><div class="wb-fill" style="width:' + pct + '%"><\/div><\/div>'
+    + '<\/div>'
+  + '<\/div>';
 }
 
 function buildBWStrip() {
@@ -760,17 +760,17 @@ function buildBWStrip() {
     var diff = (log[0].kg - log[1].kg).toFixed(1);
     var sign = diff > 0 ? '+' : '';
     var cls = diff > 0 ? ' up' : '';
-    trendHtml = '<div class="bw-trend' + cls + '">' + sign + diff + ' kg desde último registro</div>';
+    trendHtml = '<div class="bw-trend' + cls + '">' + sign + diff + ' kg desde último registro<\/div>';
   }
   var latest = log.length ? log[0].kg + '' : null;
   el.innerHTML = '<div class="bw-strip">'
     + '<div class="bw-left">'
-      + '<div class="bw-label">Peso Corporal</div>'
-      + '<div class="bw-val">' + (latest ? latest + ' <span>kg</span>' : '— <span>kg</span>') + '</div>'
+      + '<div class="bw-label">Peso Corporal<\/div>'
+      + '<div class="bw-val">' + (latest ? latest + ' <span>kg<\/span>' : '— <span>kg<\/span>') + '<\/div>'
       + trendHtml
-    + '</div>'
-    + '<button class="bw-btn" onclick="openBWModal()">Registrar</button>'
-  + '</div>';
+    + '<\/div>'
+    + '<button class="bw-btn" onclick="openBWModal()">Registrar<\/button>'
+  + '<\/div>';
 }
 
 function buildStagAlerts() {
@@ -783,7 +783,7 @@ function buildStagAlerts() {
     if (!ex) continue;
     var div = document.createElement('div');
     div.className = 'stag-alert';
-    div.innerHTML = '<div class="stag-icon">⚠️</div><div class="stag-text"><strong>Estagnação: ' + ex.name + '.</strong> Sem progressão nas últimas 3 sessões. Verifique técnica, sono ou aumente 2,5 kg.</div>';
+    div.innerHTML = '<div class="stag-icon">⚠️<\/div><div class="stag-text"><strong>Estagnação: ' + ex.name + '.<\/strong> Sem progressão nas últimas 3 sessões. Verifique técnica, sono ou aumente 2,5 kg.<\/div>';
     el.appendChild(div);
   }
 }
@@ -827,15 +827,15 @@ function mkDayCard(w, last) {
   for (var i = 0; i < w.exercises.length; i++) { if (w.exercises[i].tag === 'Principal') mainLifts.push(w.exercises[i]); }
   var anyReady = false;
   for (var m = 0; m < mainLifts.length; m++) { if (checkProgressionReady(mainLifts[m].id)) { anyReady = true; break; } }
-  var readyBadge = anyReady ? '<span class="pr-ready-badge">↑ Progredir</span>' : '';
+  var readyBadge = anyReady ? '<span class="pr-ready-badge">↑ Progredir<\/span>' : '';
   var lastLabel = last ? 'Último: ' + fmtDate(last.date) : 'Nunca realizado';
-  d.innerHTML = '<div class="day-icon">' + w.icon + '</div>'
+  d.innerHTML = '<div class="day-icon">' + w.icon + '<\/div>'
     + '<div class="day-info">'
-      + '<div class="day-name">' + w.name + readyBadge + '</div>'
-      + '<div class="day-desc">' + w.desc + '</div>'
-      + '<div class="day-meta">' + lastLabel + ' · ' + w.exercises.length + ' ex.</div>'
-    + '</div>'
-    + '<button class="start-btn" onclick="startWorkout(\'' + w.id + '\')">Iniciar</button>';
+      + '<div class="day-name">' + w.name + readyBadge + '<\/div>'
+      + '<div class="day-desc">' + w.desc + '<\/div>'
+      + '<div class="day-meta">' + lastLabel + ' · ' + w.exercises.length + ' ex.<\/div>'
+    + '<\/div>'
+    + '<button class="start-btn" onclick="startWorkout(\'' + w.id + '\')">Iniciar<\/button>';
   return d;
 }
 
@@ -857,7 +857,7 @@ function calcStreak(h) {
   return streak;
 }
 
-// ══ WORKOUT ══
+// == WORKOUT ==
 var currentWorkout = null, sessionData = {}, sessionNote = '', workoutStartTime = null;
 var sessionTimer = null, restTimer = null, restEndTime = null, restTotalSec = 0;
 var previewMode = false;
@@ -893,10 +893,10 @@ function startWorkout(id) {
 function buildWorkoutScreen(preview) {
   var body = document.getElementById('workout-body'); body.innerHTML = '';
   var hdr = document.createElement('div'); hdr.className = 'workout-header';
-  var previewLabel = preview ? ' · <span style="color:#555">Visualização</span>' : '';
-  hdr.innerHTML = '<div class="workout-day-label">' + currentWorkout.day + previewLabel + '</div>'
-    + '<div class="workout-title">' + currentWorkout.name + '</div>'
-    + '<div class="workout-meta">' + currentWorkout.desc + '</div>';
+  var previewLabel = preview ? ' · <span style="color:#555">Visualização<\/span>' : '';
+  hdr.innerHTML = '<div class="workout-day-label">' + currentWorkout.day + previewLabel + '<\/div>'
+    + '<div class="workout-title">' + currentWorkout.name + '<\/div>'
+    + '<div class="workout-meta">' + currentWorkout.desc + '<\/div>';
   body.appendChild(hdr);
 
   // Warmup card
@@ -905,13 +905,13 @@ function buildWorkoutScreen(preview) {
   var wuCard = document.createElement('div'); wuCard.className = 'warmup-card';
   var wuItems = '';
   for (var wi = 0; wi < wu.length; wi++) {
-    wuItems += '<div class="warmup-item"><span class="wi-time">' + wu[wi].time + '</span><span>' + wu[wi].text + '</span></div>';
+    wuItems += '<div class="warmup-item"><span class="wi-time">' + wu[wi].time + '<\/span><span>' + wu[wi].text + '<\/span><\/div>';
   }
   wuCard.innerHTML = '<div class="warmup-header" onclick="this.parentElement.classList.toggle(\'open\')">'
-    + '<span style="font-size:16px">🔥</span>'
-    + '<span class="warmup-title">Aquecimento · 8-10 min</span>'
-    + '<span style="color:#555;font-size:14px">›</span>'
-    + '</div><div class="warmup-body">' + wuItems + '</div>';
+    + '<span style="font-size:16px">🔥<\/span>'
+    + '<span class="warmup-title">Aquecimento · 8-10 min<\/span>'
+    + '<span style="color:#555;font-size:14px">›<\/span>'
+    + '<\/div><div class="warmup-body">' + wuItems + '<\/div>';
   body.appendChild(wuCard);
 
   var main = []; var core = [];
@@ -927,651 +927,647 @@ function buildWorkoutScreen(preview) {
   }
   if (core.length) {
     var corelbl = document.createElement('div'); corelbl.className = 'ex-section-label';
-    corelbl.innerHTML = 'Core <span style="color:#c0392b;font-size:9px">●</span>';
+    corelbl.innerHTML = 'Core <span style="color:#c0392b;font-size:9px">●<\/span>';
     body.appendChild(corelbl);
     for (var ci = 0; ci < core.length; ci++) body.appendChild(mkExCard(core[ci], main.length + ci + 1, preview));
   }
   if (!preview) {
     var noteArea = document.createElement('div'); noteArea.className = 'note-area';
-    noteArea.innerHTML = '<div class="note-area-label">📝 Nota da sessão (opcional)</div>'
-      + '<textarea class="session-note-input" placeholder="Como foi? Dor, energia, condições..." id="session-note-input"></textarea>';
-
-```
-body.appendChild(noteArea);
-```
-
-}
-var fin = document.createElement(‘div’); fin.className = ‘finish-area’;
-fin.innerHTML = preview
-? ‘<button class="finish-btn" onclick="startWorkout(\'' + currentWorkout.id + '\')">▶ Iniciar Este Treino</button>’
-: ‘<button class="finish-btn" onclick="finishWorkout()">Finalizar Treino</button>’;
-body.appendChild(fin);
+    noteArea.innerHTML = '<div class="note-area-label">📝 Nota da sessão (opcional)<\/div>'
+      + '<textarea class="session-note-input" placeholder="Como foi? Dor, energia, condições..." id="session-note-input"><\/textarea>';
+    body.appendChild(noteArea);
+  }
+  var fin = document.createElement('div'); fin.className = 'finish-area';
+  fin.innerHTML = preview
+    ? '<button class="finish-btn" onclick="startWorkout(\'' + currentWorkout.id + '\')">▶ Iniciar Este Treino<\/button>'
+    : '<button class="finish-btn" onclick="finishWorkout()">Finalizar Treino<\/button>';
+  body.appendChild(fin);
 }
 
 function mkExCard(ex, num, preview) {
-var card = document.createElement(‘div’); card.className = ‘ex-card’; card.id = ‘ex-card-’ + ex.id;
-var tag = ex.tag ? ‘<span style="font-size:10px;color:#c8a96e;margin-left:6px">’ + ex.tag + ‘</span>’ : ‘’;
-var coreTag = ex.core ? ‘<span style="font-size:10px;color:#c0392b;margin-left:6px">Core</span>’ : ‘’;
-var week = getCurrentWeek(); var phase = getPhase(week);
-var isDeload = (week === 12);
-var adjReps = getWeekReps(week, ex.reps);
-var adjSets = isDeload ? Math.max(2, ex.sets - 1) : ex.sets;
-var sugKg = getSuggestedLoad(ex.id, phase);
-var prs = getPRs(); var pr = prs[ex.id];
-var oneRM = pr ? estimate1RM(pr.kg, pr.reps) : null;
-var readyToProgress = (ex.tag === ‘Principal’) && checkProgressionReady(ex.id);
-var sugHtml = ‘’;
-if (ex.tag === ‘Principal’) {
-var chips = ‘’;
-if (sugKg) chips += ‘<span class="sug-chip">💡 Sugerido: ’ + sugKg + ’ kg</span>’;
-if (oneRM) chips += ‘<span class="sug-chip blue">1RM est.: ’ + oneRM + ’ kg</span>’;
-if (readyToProgress) chips += ‘<span class="sug-chip green">↑ Pronto para +2,5 kg</span>’;
-if (isDeload) chips += ‘<span class="sug-chip red">⚠️ Deload: ’ + adjSets + ’ séries</span>’;
-if (chips) sugHtml = ‘<div class="sug-row">’ + chips + ‘</div>’;
-}
-var prev = getLastSession(currentWorkout.id);
-var rows = ‘’;
-for (var i = 0; i < adjSets; i++) {
-var ps = null;
-if (prev && prev.sets && prev.sets[ex.id] && prev.sets[ex.id][i]) ps = prev.sets[ex.id][i];
-var phKg = (sugKg && !( ps && ps.kg)) ? sugKg : (ps && ps.kg ? ps.kg : ‘’);
-var phReps = (ps && ps.reps) ? ps.reps : adjReps;
-if (preview) {
-rows += ‘<div class="set-row-5col">’
-+ ‘<div class="set-num">’ + (i + 1) + ‘</div>’
-+ ‘<div class="set-input" style="color:' + (ps && ps.kg ? '#e8e2d8' : '#444') + ';display:flex;align-items:center;justify-content:center;border-color:#1e1e1e">’ + (ps && ps.kg ? ps.kg : (sugKg || ‘—’)) + ‘</div>’
-+ ‘<div class="set-input" style="color:' + (ps && ps.reps ? '#e8e2d8' : '#444') + ';display:flex;align-items:center;justify-content:center;border-color:#1e1e1e">’ + phReps + ‘</div>’
-+ ‘<div class="rpe-input" style="opacity:.3;display:flex;align-items:center;justify-content:center">RPE</div>’
-+ ‘<div class="set-check" style="opacity:.3;cursor:default">✓</div>’
-+ ‘</div>’;
-} else {
-rows += ‘<div class="set-row-5col" id="set-row-' + ex.id + '-' + i + '">’
-+ ‘<div class="set-num">’ + (i + 1) + ‘</div>’
-+ ‘<input class="set-input" type="number" inputmode="decimal" placeholder="' + (phKg || '—') + '" id="kg-' + ex.id + '-' + i + '" onchange="updateSet(\'' + ex.id + '\',' + i + ')">’
-+ ‘<input class="set-input" type="text" inputmode="numeric" placeholder="' + phReps + '" id="reps-' + ex.id + '-' + i + '" onchange="updateSet(\'' + ex.id + '\',' + i + ')">’
-+ ‘<input class="rpe-input" type="number" inputmode="numeric" min="1" max="10" placeholder="RPE" id="rpe-' + ex.id + '-' + i + '" onchange="updateSet(\'' + ex.id + '\',' + i + ')">’
-+ ‘<div class="set-check" id="check-' + ex.id + '-' + i + '" onclick="toggleSet(\'' + ex.id + '\',' + i + ',' + ex.rest + ')">✓</div>’
-+ ‘</div>’;
-}
-}
-var adjPresc = adjSets + ‘× ’ + adjReps + (ex.rest ? ’ · ’ + fmtSecs(ex.rest) + ’ descanso’ : ‘’);
-card.innerHTML = ‘<div class="ex-card-header" onclick="toggleEx(\'' + ex.id + '\')">’
-+ ‘<div class="ex-num">’ + num + ‘</div>’
-+ ‘<div class="ex-name-wrap"><div class="ex-title">’ + ex.name + tag + coreTag + ‘</div>’
-+ ‘<div class="ex-prescription">’ + adjPresc + ‘</div></div>’
-+ ‘<div class="ex-status-icon" id="ex-status-' + ex.id + '">○</div>’
-+ ‘</div>’
-+ ‘<div class="ex-sets-container">’
-+ (ex.note ? ’<div class="ex-note-text">💡 ’ + ex.note + ‘</div>’ : ‘’)
-+ sugHtml
-+ ‘<div class="sets-header-5col"><div>Série</div><div>Carga kg</div><div>Reps</div><div>RPE</div><div></div></div>’
-+ rows
-+ (ex.rest ? ’<div class="rest-badge"><div class="rest-dot"></div>Descanso: ’ + fmtSecs(ex.rest) + ‘</div>’ : ‘’)
-+ ‘<button class="yt-btn" onclick="openYT(\'' + ex.id + '\')">▶ Ver execução</button>’
-+ ‘</div>’;
-return card;
+  var card = document.createElement('div'); card.className = 'ex-card'; card.id = 'ex-card-' + ex.id;
+  var tag = ex.tag ? '<span style="font-size:10px;color:#c8a96e;margin-left:6px">' + ex.tag + '<\/span>' : '';
+  var coreTag = ex.core ? '<span style="font-size:10px;color:#c0392b;margin-left:6px">Core<\/span>' : '';
+  var week = getCurrentWeek(); var phase = getPhase(week);
+  var isDeload = (week === 12);
+  var adjReps = getWeekReps(week, ex.reps);
+  var adjSets = isDeload ? Math.max(2, ex.sets - 1) : ex.sets;
+  var sugKg = getSuggestedLoad(ex.id, phase);
+  var prs = getPRs(); var pr = prs[ex.id];
+  var oneRM = pr ? estimate1RM(pr.kg, pr.reps) : null;
+  var readyToProgress = (ex.tag === 'Principal') && checkProgressionReady(ex.id);
+  var sugHtml = '';
+  if (ex.tag === 'Principal') {
+    var chips = '';
+    if (sugKg) chips += '<span class="sug-chip">💡 Sugerido: ' + sugKg + ' kg<\/span>';
+    if (oneRM) chips += '<span class="sug-chip blue">1RM est.: ' + oneRM + ' kg<\/span>';
+    if (readyToProgress) chips += '<span class="sug-chip green">↑ Pronto para +2,5 kg<\/span>';
+    if (isDeload) chips += '<span class="sug-chip red">⚠️ Deload: ' + adjSets + ' séries<\/span>';
+    if (chips) sugHtml = '<div class="sug-row">' + chips + '<\/div>';
+  }
+  var prev = getLastSession(currentWorkout.id);
+  var rows = '';
+  for (var i = 0; i < adjSets; i++) {
+    var ps = null;
+    if (prev && prev.sets && prev.sets[ex.id] && prev.sets[ex.id][i]) ps = prev.sets[ex.id][i];
+    var phKg = (sugKg && !( ps && ps.kg)) ? sugKg : (ps && ps.kg ? ps.kg : '');
+    var phReps = (ps && ps.reps) ? ps.reps : adjReps;
+    if (preview) {
+      rows += '<div class="set-row-5col">'
+        + '<div class="set-num">' + (i + 1) + '<\/div>'
+        + '<div class="set-input" style="color:' + (ps && ps.kg ? '#e8e2d8' : '#444') + ';display:flex;align-items:center;justify-content:center;border-color:#1e1e1e">' + (ps && ps.kg ? ps.kg : (sugKg || '—')) + '<\/div>'
+        + '<div class="set-input" style="color:' + (ps && ps.reps ? '#e8e2d8' : '#444') + ';display:flex;align-items:center;justify-content:center;border-color:#1e1e1e">' + phReps + '<\/div>'
+        + '<div class="rpe-input" style="opacity:.3;display:flex;align-items:center;justify-content:center">RPE<\/div>'
+        + '<div class="set-check" style="opacity:.3;cursor:default">✓<\/div>'
+        + '<\/div>';
+    } else {
+      rows += '<div class="set-row-5col" id="set-row-' + ex.id + '-' + i + '">'
+        + '<div class="set-num">' + (i + 1) + '<\/div>'
+        + '<input class="set-input" type="number" inputmode="decimal" placeholder="' + (phKg || '—') + '" id="kg-' + ex.id + '-' + i + '" onchange="updateSet(\'' + ex.id + '\',' + i + ')">'
+        + '<input class="set-input" type="text" inputmode="numeric" placeholder="' + phReps + '" id="reps-' + ex.id + '-' + i + '" onchange="updateSet(\'' + ex.id + '\',' + i + ')">'
+        + '<input class="rpe-input" type="number" inputmode="numeric" min="1" max="10" placeholder="RPE" id="rpe-' + ex.id + '-' + i + '" onchange="updateSet(\'' + ex.id + '\',' + i + ')">'
+        + '<div class="set-check" id="check-' + ex.id + '-' + i + '" onclick="toggleSet(\'' + ex.id + '\',' + i + ',' + ex.rest + ')">✓<\/div>'
+        + '<\/div>';
+    }
+  }
+  var adjPresc = adjSets + '× ' + adjReps + (ex.rest ? ' · ' + fmtSecs(ex.rest) + ' descanso' : '');
+  card.innerHTML = '<div class="ex-card-header" onclick="toggleEx(\'' + ex.id + '\')">'
+    + '<div class="ex-num">' + num + '<\/div>'
+    + '<div class="ex-name-wrap"><div class="ex-title">' + ex.name + tag + coreTag + '<\/div>'
+    + '<div class="ex-prescription">' + adjPresc + '<\/div><\/div>'
+    + '<div class="ex-status-icon" id="ex-status-' + ex.id + '">○<\/div>'
+    + '<\/div>'
+    + '<div class="ex-sets-container">'
+    + (ex.note ? '<div class="ex-note-text">💡 ' + ex.note + '<\/div>' : '')
+    + sugHtml
+    + '<div class="sets-header-5col"><div>Série<\/div><div>Carga kg<\/div><div>Reps<\/div><div>RPE<\/div><div><\/div><\/div>'
+    + rows
+    + (ex.rest ? '<div class="rest-badge"><div class="rest-dot"><\/div>Descanso: ' + fmtSecs(ex.rest) + '<\/div>' : '')
+    + '<button class="yt-btn" onclick="openYT(\'' + ex.id + '\')">▶ Ver execução<\/button>'
+    + '<\/div>';
+  return card;
 }
 
 function toggleEx(id) {
-var card = document.getElementById(‘ex-card-’ + id); if (!card) return;
-var was = card.classList.contains(‘open’);
-var cards = document.querySelectorAll(’.ex-card.open’);
-for (var i = 0; i < cards.length; i++) cards[i].classList.remove(‘open’);
-if (!was) card.classList.add(‘open’);
+  var card = document.getElementById('ex-card-' + id); if (!card) return;
+  var was = card.classList.contains('open');
+  var cards = document.querySelectorAll('.ex-card.open');
+  for (var i = 0; i < cards.length; i++) cards[i].classList.remove('open');
+  if (!was) card.classList.add('open');
 }
 
 function updateSet(exId, idx) {
-if (!sessionData[exId]) sessionData[exId] = {};
-var kgEl = document.getElementById(‘kg-’ + exId + ‘-’ + idx);
-var rpsEl = document.getElementById(‘reps-’ + exId + ‘-’ + idx);
-var rpeEl = document.getElementById(‘rpe-’ + exId + ‘-’ + idx);
-sessionData[exId][idx] = {
-kg: kgEl ? kgEl.value : ‘’,
-reps: rpsEl ? rpsEl.value : ‘’,
-rpe: rpeEl ? rpeEl.value : ‘’,
-done: sessionData[exId][idx] ? sessionData[exId][idx].done : false
-};
-saveSession();
+  if (!sessionData[exId]) sessionData[exId] = {};
+  var kgEl = document.getElementById('kg-' + exId + '-' + idx);
+  var rpsEl = document.getElementById('reps-' + exId + '-' + idx);
+  var rpeEl = document.getElementById('rpe-' + exId + '-' + idx);
+  sessionData[exId][idx] = {
+    kg: kgEl ? kgEl.value : '',
+    reps: rpsEl ? rpsEl.value : '',
+    rpe: rpeEl ? rpeEl.value : '',
+    done: sessionData[exId][idx] ? sessionData[exId][idx].done : false
+  };
+  saveSession();
 }
 
 function toggleSet(exId, idx, rest) {
-updateSet(exId, idx);
-if (!sessionData[exId]) sessionData[exId] = {};
-if (!sessionData[exId][idx]) sessionData[exId][idx] = {};
-var now = !sessionData[exId][idx].done;
-sessionData[exId][idx].done = now;
-saveSession();
-var chk = document.getElementById(‘check-’ + exId + ‘-’ + idx);
-var row = document.getElementById(‘set-row-’ + exId + ‘-’ + idx);
-if (chk) chk.classList.toggle(‘done’, now);
-if (row) row.classList.toggle(‘set-done’, now);
-var ex = findEx(exId);
-if (ex) {
-var allDone = true;
-for (var i = 0; i < ex.sets; i++) {
-if (!sessionData[exId] || !sessionData[exId][i] || !sessionData[exId][i].done) { allDone = false; break; }
-}
-var card = document.getElementById(‘ex-card-’ + exId);
-if (card) card.classList.toggle(‘completed’, allDone);
-var ic = document.getElementById(‘ex-status-’ + exId);
-if (ic) ic.textContent = allDone ? ‘✅’ : ‘○’;
-}
-if (now && rest && parseInt(rest) > 0) startRestTimer(parseInt(rest));
+  updateSet(exId, idx);
+  if (!sessionData[exId]) sessionData[exId] = {};
+  if (!sessionData[exId][idx]) sessionData[exId][idx] = {};
+  var now = !sessionData[exId][idx].done;
+  sessionData[exId][idx].done = now;
+  saveSession();
+  var chk = document.getElementById('check-' + exId + '-' + idx);
+  var row = document.getElementById('set-row-' + exId + '-' + idx);
+  if (chk) chk.classList.toggle('done', now);
+  if (row) row.classList.toggle('set-done', now);
+  var ex = findEx(exId);
+  if (ex) {
+    var allDone = true;
+    for (var i = 0; i < ex.sets; i++) {
+      if (!sessionData[exId] || !sessionData[exId][i] || !sessionData[exId][i].done) { allDone = false; break; }
+    }
+    var card = document.getElementById('ex-card-' + exId);
+    if (card) card.classList.toggle('completed', allDone);
+    var ic = document.getElementById('ex-status-' + exId);
+    if (ic) ic.textContent = allDone ? '✅' : '○';
+  }
+  if (now && rest && parseInt(rest) > 0) startRestTimer(parseInt(rest));
 }
 
 function findEx(id) {
-var all = PROGRAM.strength.concat(PROGRAM.cardio);
-for (var i = 0; i < all.length; i++) {
-for (var j = 0; j < all[i].exercises.length; j++) {
-if (all[i].exercises[j].id === id) return all[i].exercises[j];
-}
-}
-return null;
+  var all = PROGRAM.strength.concat(PROGRAM.cardio);
+  for (var i = 0; i < all.length; i++) {
+    for (var j = 0; j < all[i].exercises.length; j++) {
+      if (all[i].exercises[j].id === id) return all[i].exercises[j];
+    }
+  }
+  return null;
 }
 
-// ══ TIMER & BEEPS ══
+// == TIMER & BEEPS ==
 function playBeeps() {
-try {
-var ctx = new (window.AudioContext || window.webkitAudioContext)();
-var times = [0, 0.18, 0.36];
-for (var t = 0; t < times.length; t++) {
-(function(time) {
-var osc = ctx.createOscillator(); var gain = ctx.createGain();
-osc.connect(gain); gain.connect(ctx.destination);
-osc.type = ‘sine’; osc.frequency.value = 880;
-gain.gain.setValueAtTime(0, ctx.currentTime + time);
-gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + time + 0.01);
-gain.gain.linearRampToValueAtTime(0, ctx.currentTime + time + 0.12);
-osc.start(ctx.currentTime + time); osc.stop(ctx.currentTime + time + 0.13);
-})(times[t]);
-}
-} catch(e) {}
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var times = [0, 0.18, 0.36];
+    for (var t = 0; t < times.length; t++) {
+      (function(time) {
+        var osc = ctx.createOscillator(); var gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sine'; osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0, ctx.currentTime + time);
+        gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + time + 0.01);
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + time + 0.12);
+        osc.start(ctx.currentTime + time); osc.stop(ctx.currentTime + time + 0.13);
+      })(times[t]);
+    }
+  } catch(e) {}
 }
 
 function timerDone() {
-clearInterval(restTimer); restTimer = null; restEndTime = null;
-document.getElementById(‘timer-bar’).classList.remove(‘active’);
-playBeeps();
-if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-showToast(‘Descanso concluído! 💪’);
+  clearInterval(restTimer); restTimer = null; restEndTime = null;
+  document.getElementById('timer-bar').classList.remove('active');
+  playBeeps();
+  if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+  showToast('Descanso concluído! 💪');
 }
 
 function startRestTimer(sec) {
-clearInterval(restTimer);
-restTotalSec = sec; restEndTime = Date.now() + sec * 1000;
-var bar = document.getElementById(‘timer-bar’);
-var disp = document.getElementById(‘timer-display’);
-var prog = document.getElementById(‘timer-progress’);
-bar.classList.add(‘active’);
-function tick() {
-var r = Math.max(0, Math.round((restEndTime - Date.now()) / 1000));
-disp.textContent = fmtSecs(r);
-prog.style.width = (r / restTotalSec * 100) + ‘%’;
-if (r <= 0) timerDone();
-}
-tick();
-restTimer = setInterval(tick, 500);
+  clearInterval(restTimer);
+  restTotalSec = sec; restEndTime = Date.now() + sec * 1000;
+  var bar = document.getElementById('timer-bar');
+  var disp = document.getElementById('timer-display');
+  var prog = document.getElementById('timer-progress');
+  bar.classList.add('active');
+  function tick() {
+    var r = Math.max(0, Math.round((restEndTime - Date.now()) / 1000));
+    disp.textContent = fmtSecs(r);
+    prog.style.width = (r / restTotalSec * 100) + '%';
+    if (r <= 0) timerDone();
+  }
+  tick();
+  restTimer = setInterval(tick, 500);
 }
 function skipTimer() {
-clearInterval(restTimer); restTimer = null; restEndTime = null;
-document.getElementById(‘timer-bar’).classList.remove(‘active’);
+  clearInterval(restTimer); restTimer = null; restEndTime = null;
+  document.getElementById('timer-bar').classList.remove('active');
 }
 
-// ══ FINISH & SUMMARY ══
+// == FINISH & SUMMARY ==
 function finishWorkout() {
-clearInterval(sessionTimer); clearInterval(restTimer);
-document.getElementById(‘timer-bar’).classList.remove(‘active’);
-var noteEl = document.getElementById(‘session-note-input’);
-if (noteEl) sessionNote = noteEl.value;
-var dur = Math.floor((Date.now() - workoutStartTime) / 60000);
-var h = getHistory();
-var completedEx = 0; var totalEx = currentWorkout.exercises.length;
-var exIds = Object.keys(sessionData);
-for (var i = 0; i < exIds.length; i++) {
-var ex = findEx(exIds[i]); if (!ex) continue;
-var sets = sessionData[exIds[i]]; var keys = Object.keys(sets); var doneCount = 0;
-for (var k = 0; k < keys.length; k++) { if (sets[keys[k]].done) doneCount++; }
-if (doneCount >= Math.ceil(ex.sets * 0.6)) completedEx++;
-}
-var entry = {
-id: Date.now(), workoutId: currentWorkout.id, workoutName: currentWorkout.name,
-date: new Date().toISOString(), duration: dur,
-sets: JSON.parse(JSON.stringify(sessionData)),
-note: sessionNote, completedEx: completedEx, totalEx: totalEx
-};
-h.unshift(entry); saveHistory(h);
-var newPRs = updatePRs(entry);
-clearSession();
-showSummary(entry, newPRs, h);
+  clearInterval(sessionTimer); clearInterval(restTimer);
+  document.getElementById('timer-bar').classList.remove('active');
+  var noteEl = document.getElementById('session-note-input');
+  if (noteEl) sessionNote = noteEl.value;
+  var dur = Math.floor((Date.now() - workoutStartTime) / 60000);
+  var h = getHistory();
+  var completedEx = 0; var totalEx = currentWorkout.exercises.length;
+  var exIds = Object.keys(sessionData);
+  for (var i = 0; i < exIds.length; i++) {
+    var ex = findEx(exIds[i]); if (!ex) continue;
+    var sets = sessionData[exIds[i]]; var keys = Object.keys(sets); var doneCount = 0;
+    for (var k = 0; k < keys.length; k++) { if (sets[keys[k]].done) doneCount++; }
+    if (doneCount >= Math.ceil(ex.sets * 0.6)) completedEx++;
+  }
+  var entry = {
+    id: Date.now(), workoutId: currentWorkout.id, workoutName: currentWorkout.name,
+    date: new Date().toISOString(), duration: dur,
+    sets: JSON.parse(JSON.stringify(sessionData)),
+    note: sessionNote, completedEx: completedEx, totalEx: totalEx
+  };
+  h.unshift(entry); saveHistory(h);
+  var newPRs = updatePRs(entry);
+  clearSession();
+  showSummary(entry, newPRs, h);
 }
 
 function calcSessionVol(entry) {
-var vol = 0;
-var exIds = Object.keys(entry.sets);
-for (var i = 0; i < exIds.length; i++) {
-var sets = entry.sets[exIds[i]]; var keys = Object.keys(sets);
-for (var k = 0; k < keys.length; k++) {
-var s = sets[keys[k]];
-if (s.done && s.kg && s.reps) vol += parseFloat(s.kg) * parseInt(s.reps);
-}
-}
-return Math.round(vol);
+  var vol = 0;
+  var exIds = Object.keys(entry.sets);
+  for (var i = 0; i < exIds.length; i++) {
+    var sets = entry.sets[exIds[i]]; var keys = Object.keys(sets);
+    for (var k = 0; k < keys.length; k++) {
+      var s = sets[keys[k]];
+      if (s.done && s.kg && s.reps) vol += parseFloat(s.kg) * parseInt(s.reps);
+    }
+  }
+  return Math.round(vol);
 }
 
 function updatePRs(entry) {
-var prs = getPRs(); var newPRs = [];
-var exIds = Object.keys(entry.sets);
-for (var i = 0; i < exIds.length; i++) {
-var exId = exIds[i]; var sets = entry.sets[exId]; var keys = Object.keys(sets);
-for (var k = 0; k < keys.length; k++) {
-var s = sets[keys[k]]; if (!s.kg || !s.reps) continue;
-var kg = parseFloat(s.kg); var reps = parseInt(s.reps);
-if (isNaN(kg) || isNaN(reps)) continue;
-var new1RM = estimate1RM(kg, reps);
-var old1RM = prs[exId] ? estimate1RM(prs[exId].kg, prs[exId].reps) : 0;
-if (new1RM > old1RM) {
-var ex = findEx(exId);
-newPRs.push({ name: ex ? ex.name : exId, kg: kg, reps: reps, est1RM: new1RM });
-prs[exId] = { kg: kg, reps: reps, volume: kg * reps, date: entry.date, est1RM: new1RM };
-}
-}
-}
-savePRs(prs); return newPRs;
+  var prs = getPRs(); var newPRs = [];
+  var exIds = Object.keys(entry.sets);
+  for (var i = 0; i < exIds.length; i++) {
+    var exId = exIds[i]; var sets = entry.sets[exId]; var keys = Object.keys(sets);
+    for (var k = 0; k < keys.length; k++) {
+      var s = sets[keys[k]]; if (!s.kg || !s.reps) continue;
+      var kg = parseFloat(s.kg); var reps = parseInt(s.reps);
+      if (isNaN(kg) || isNaN(reps)) continue;
+      var new1RM = estimate1RM(kg, reps);
+      var old1RM = prs[exId] ? estimate1RM(prs[exId].kg, prs[exId].reps) : 0;
+      if (new1RM > old1RM) {
+        var ex = findEx(exId);
+        newPRs.push({ name: ex ? ex.name : exId, kg: kg, reps: reps, est1RM: new1RM });
+        prs[exId] = { kg: kg, reps: reps, volume: kg * reps, date: entry.date, est1RM: new1RM };
+      }
+    }
+  }
+  savePRs(prs); return newPRs;
 }
 
 function showSummary(entry, newPRs, history) {
-var prev = null;
-for (var i = 1; i < history.length; i++) { if (history[i].workoutId === entry.workoutId) { prev = history[i]; break; } }
-var vol = calcSessionVol(entry);
-var prevVol = prev ? calcSessionVol(prev) : null;
-var emoji = newPRs.length > 0 ? ‘🏆’ : (entry.completedEx >= entry.totalEx ? ‘✅’ : ‘💪’);
-var title = newPRs.length > 0 ? ‘Novo Recorde!’ : (entry.completedEx >= entry.totalEx ? ‘Treino Completo!’ : ‘Bom Trabalho!’);
-var html = ‘<div class="summary-hero">’
-+ ‘<div class="summary-emoji">’ + emoji + ‘</div>’
-+ ‘<div class="summary-title">’ + title + ‘</div>’
-+ ‘<div class="summary-sub">’ + entry.workoutName + ’ · ’ + fmtDate(entry.date) + ‘</div>’
-+ ‘</div>’;
-html += ‘<div class="summary-stats">’
-+ ‘<div class="summary-stat"><span class="summary-stat-num">’ + entry.duration + ‘</span><span class="summary-stat-label">Minutos</span></div>’
-+ ‘<div class="summary-stat"><span class="summary-stat-num">’ + entry.completedEx + ‘/’ + entry.totalEx + ‘</span><span class="summary-stat-label">Exercícios</span></div>’
-+ ‘<div class="summary-stat"><span class="summary-stat-num">’ + Math.round(vol / 100) / 10 + ‘k</span><span class="summary-stat-label">Vol. kg</span></div>’
-+ ‘</div>’;
-if (newPRs.length) {
-html += ‘<div class="section-label" style="margin-top:8px">🏆 Novos Recordes</div><div class="summary-prs">’;
-for (var p = 0; p < newPRs.length; p++) {
-html += ‘<div class="summary-pr-item"><div style="font-size:20px">🥇</div><div><div class="summary-pr-name">’ + newPRs[p].name + ‘</div>’
-+ ‘<div class="summary-pr-val">’ + newPRs[p].kg + ’ kg × ’ + newPRs[p].reps + ’ reps · 1RM est. ’ + newPRs[p].est1RM + ’ kg</div></div></div>’;
-}
-html += ‘</div>’;
-}
-if (prev) {
-var durDiff = entry.duration - prev.duration;
-var volDiff = prevVol !== null ? vol - prevVol : null;
-html += ‘<div class="section-label" style="margin-top:8px">📊 vs. Sessão Anterior</div><div class="summary-compare">’
-+ mkSCRow(‘Duração’, prev.duration + ’ min’, entry.duration + ’ min’, durDiff, true)
-+ mkSCRow(‘Volume’, prevVol !== null ? prevVol + ’ kg’ : ‘—’, vol + ’ kg’, volDiff, false)
-+ mkSCRow(‘Exercícios’, (prev.completedEx || ‘?’) + ‘/’ + (prev.totalEx || ‘?’), entry.completedEx + ‘/’ + entry.totalEx, prev.completedEx ? entry.completedEx - prev.completedEx : null, false)
-+ ‘</div>’;
-}
-if (entry.note) html += ’<div class="section-label" style="margin-top:8px">📝 Nota</div><div class="summary-note">💬 ’ + entry.note + ‘</div>’;
-document.getElementById(‘summary-content’).innerHTML = html;
-document.getElementById(‘summary-overlay’).classList.add(‘active’);
+  var prev = null;
+  for (var i = 1; i < history.length; i++) { if (history[i].workoutId === entry.workoutId) { prev = history[i]; break; } }
+  var vol = calcSessionVol(entry);
+  var prevVol = prev ? calcSessionVol(prev) : null;
+  var emoji = newPRs.length > 0 ? '🏆' : (entry.completedEx >= entry.totalEx ? '✅' : '💪');
+  var title = newPRs.length > 0 ? 'Novo Recorde!' : (entry.completedEx >= entry.totalEx ? 'Treino Completo!' : 'Bom Trabalho!');
+  var html = '<div class="summary-hero">'
+    + '<div class="summary-emoji">' + emoji + '<\/div>'
+    + '<div class="summary-title">' + title + '<\/div>'
+    + '<div class="summary-sub">' + entry.workoutName + ' · ' + fmtDate(entry.date) + '<\/div>'
+    + '<\/div>';
+  html += '<div class="summary-stats">'
+    + '<div class="summary-stat"><span class="summary-stat-num">' + entry.duration + '<\/span><span class="summary-stat-label">Minutos<\/span><\/div>'
+    + '<div class="summary-stat"><span class="summary-stat-num">' + entry.completedEx + '/' + entry.totalEx + '<\/span><span class="summary-stat-label">Exercícios<\/span><\/div>'
+    + '<div class="summary-stat"><span class="summary-stat-num">' + Math.round(vol / 100) / 10 + 'k<\/span><span class="summary-stat-label">Vol. kg<\/span><\/div>'
+    + '<\/div>';
+  if (newPRs.length) {
+    html += '<div class="section-label" style="margin-top:8px">🏆 Novos Recordes<\/div><div class="summary-prs">';
+    for (var p = 0; p < newPRs.length; p++) {
+      html += '<div class="summary-pr-item"><div style="font-size:20px">🥇<\/div><div><div class="summary-pr-name">' + newPRs[p].name + '<\/div>'
+        + '<div class="summary-pr-val">' + newPRs[p].kg + ' kg × ' + newPRs[p].reps + ' reps · 1RM est. ' + newPRs[p].est1RM + ' kg<\/div><\/div><\/div>';
+    }
+    html += '<\/div>';
+  }
+  if (prev) {
+    var durDiff = entry.duration - prev.duration;
+    var volDiff = prevVol !== null ? vol - prevVol : null;
+    html += '<div class="section-label" style="margin-top:8px">📊 vs. Sessão Anterior<\/div><div class="summary-compare">'
+      + mkSCRow('Duração', prev.duration + ' min', entry.duration + ' min', durDiff, true)
+      + mkSCRow('Volume', prevVol !== null ? prevVol + ' kg' : '—', vol + ' kg', volDiff, false)
+      + mkSCRow('Exercícios', (prev.completedEx || '?') + '/' + (prev.totalEx || '?'), entry.completedEx + '/' + entry.totalEx, prev.completedEx ? entry.completedEx - prev.completedEx : null, false)
+      + '<\/div>';
+  }
+  if (entry.note) html += '<div class="section-label" style="margin-top:8px">📝 Nota<\/div><div class="summary-note">💬 ' + entry.note + '<\/div>';
+  document.getElementById('summary-content').innerHTML = html;
+  document.getElementById('summary-overlay').classList.add('active');
 }
 
 function mkSCRow(label, prev, curr, diff, lowerIsBetter) {
-var deltaHtml = ‘’;
-if (diff !== null && !isNaN(diff) && diff !== 0) {
-var pos = lowerIsBetter ? (diff < 0) : (diff > 0);
-deltaHtml = ‘<span class="sc-delta ' + (pos ? 'pos' : 'neg') + '">’ + (diff > 0 ? ‘+’ : ‘’) + Math.round(diff) + ‘</span>’;
-}
-return ‘<div class="sc-row"><span class="sc-label">’ + label + ‘</span>’
-+ ‘<div class="sc-vals"><span class="sc-prev">’ + prev + ‘</span><span class="sc-curr">’ + curr + ‘</span>’ + deltaHtml + ‘</div></div>’;
+  var deltaHtml = '';
+  if (diff !== null && !isNaN(diff) && diff !== 0) {
+    var pos = lowerIsBetter ? (diff < 0) : (diff > 0);
+    deltaHtml = '<span class="sc-delta ' + (pos ? 'pos' : 'neg') + '">' + (diff > 0 ? '+' : '') + Math.round(diff) + '<\/span>';
+  }
+  return '<div class="sc-row"><span class="sc-label">' + label + '<\/span>'
+    + '<div class="sc-vals"><span class="sc-prev">' + prev + '<\/span><span class="sc-curr">' + curr + '<\/span>' + deltaHtml + '<\/div><\/div>';
 }
 
 function closeSummary() {
-document.getElementById(‘summary-overlay’).classList.remove(‘active’);
-goHome();
+  document.getElementById('summary-overlay').classList.remove('active');
+  goHome();
 }
 
 function getLastSession(wid) {
-var h = getHistory();
-for (var i = 0; i < h.length; i++) { if (h[i].workoutId === wid) return h[i]; }
-return null;
+  var h = getHistory();
+  for (var i = 0; i < h.length; i++) { if (h[i].workoutId === wid) return h[i]; }
+  return null;
 }
 
-// ══ RESUME SESSION ══
+// == RESUME SESSION ==
 function showResumeBar(active) {
-var existing = document.getElementById(‘resume-bar’); if (existing) existing.remove();
-var all = PROGRAM.strength.concat(PROGRAM.cardio); var w = null;
-for (var i = 0; i < all.length; i++) { if (all[i].id === active.workoutId) { w = all[i]; break; } }
-if (!w) return;
-var elapsed = Math.floor((Date.now() - active.startTime) / 60000);
-var bar = document.createElement(‘div’); bar.id = ‘resume-bar’;
-bar.style.cssText = ‘position:fixed;bottom:72px;left:0;right:0;z-index:90;margin:0 16px 8px;background:#1a2a1a;border:1px solid #27ae60;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;’;
-bar.innerHTML = ‘<div style="flex:1"><div style="font-size:13px;font-weight:700;color:#27ae60">Treino em andamento</div>’
-+ ‘<div style="font-size:12px;color:#888;margin-top:2px">’ + w.name + ’ · ’ + elapsed + ’ min atrás</div></div>’
-+ ‘<button onclick="resumeWorkout()" style="background:#27ae60;border:none;border-radius:8px;color:#0a0a0a;font-weight:800;font-size:13px;padding:8px 14px;cursor:pointer">Retomar</button>’
-+ ‘<button onclick="discardSession()" style="background:none;border:none;color:#555;font-size:20px;cursor:pointer;padding:4px 6px">✕</button>’;
-var homeBody = document.getElementById(‘screen-home’).querySelector(’.screen-body’);
-if (homeBody) homeBody.prepend(bar);
+  var existing = document.getElementById('resume-bar'); if (existing) existing.remove();
+  var all = PROGRAM.strength.concat(PROGRAM.cardio); var w = null;
+  for (var i = 0; i < all.length; i++) { if (all[i].id === active.workoutId) { w = all[i]; break; } }
+  if (!w) return;
+  var elapsed = Math.floor((Date.now() - active.startTime) / 60000);
+  var bar = document.createElement('div'); bar.id = 'resume-bar';
+  bar.style.cssText = 'position:fixed;bottom:72px;left:0;right:0;z-index:90;margin:0 16px 8px;background:#1a2a1a;border:1px solid #27ae60;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;';
+  bar.innerHTML = '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:#27ae60">Treino em andamento<\/div>'
+    + '<div style="font-size:12px;color:#888;margin-top:2px">' + w.name + ' · ' + elapsed + ' min atrás<\/div><\/div>'
+    + '<button onclick="resumeWorkout()" style="background:#27ae60;border:none;border-radius:8px;color:#0a0a0a;font-weight:800;font-size:13px;padding:8px 14px;cursor:pointer">Retomar<\/button>'
+    + '<button onclick="discardSession()" style="background:none;border:none;color:#555;font-size:20px;cursor:pointer;padding:4px 6px">✕<\/button>';
+  var homeBody = document.getElementById('screen-home').querySelector('.screen-body');
+  if (homeBody) homeBody.prepend(bar);
 }
 
 function resumeWorkout() {
-var active = getActiveSession(); if (!active) return;
-var all = PROGRAM.strength.concat(PROGRAM.cardio);
-for (var i = 0; i < all.length; i++) { if (all[i].id === active.workoutId) { currentWorkout = all[i]; break; } }
-if (!currentWorkout) return;
-workoutStartTime = active.startTime; sessionData = active.sessionData || {}; sessionNote = active.sessionNote || ‘’; previewMode = false;
-document.getElementById(‘wo-title’).textContent = currentWorkout.name;
-document.getElementById(‘wo-date’).textContent = fmtDate(new Date());
-buildWorkoutScreen(false);
-var exIds = Object.keys(sessionData);
-for (var ei = 0; ei < exIds.length; ei++) {
-var exId = exIds[ei]; var sets = sessionData[exId]; var keys = Object.keys(sets);
-for (var ki = 0; ki < keys.length; ki++) {
-var idx = keys[ki]; var s = sets[idx];
-var kgEl = document.getElementById(‘kg-’ + exId + ‘-’ + idx);
-var rpsEl = document.getElementById(‘reps-’ + exId + ‘-’ + idx);
-var rpeEl = document.getElementById(‘rpe-’ + exId + ‘-’ + idx);
-if (kgEl && s.kg) kgEl.value = s.kg;
-if (rpsEl && s.reps) rpsEl.value = s.reps;
-if (rpeEl && s.rpe) rpeEl.value = s.rpe;
-if (s.done) {
-var chk = document.getElementById(‘check-’ + exId + ‘-’ + idx);
-var row = document.getElementById(‘set-row-’ + exId + ‘-’ + idx);
-if (chk) chk.classList.add(‘done’);
-if (row) row.classList.add(‘set-done’);
-}
-}
-var ex = findEx(exId);
-if (ex) {
-var allDone = true;
-for (var si = 0; si < ex.sets; si++) {
-if (!sessionData[exId][si] || !sessionData[exId][si].done) { allDone = false; break; }
-}
-if (allDone) {
-var card = document.getElementById(‘ex-card-’ + exId);
-if (card) card.classList.add(‘completed’);
-var ic = document.getElementById(‘ex-status-’ + exId);
-if (ic) ic.textContent = ‘✅’;
-}
-}
-}
-navigate(‘home’, ‘workout’);
-clearInterval(sessionTimer);
-sessionTimer = setInterval(function() {
-var el = document.getElementById(‘wo-timer-mini’);
-if (el) el.textContent = fmtSecs(Math.floor((Date.now() - workoutStartTime) / 1000));
-}, 1000);
+  var active = getActiveSession(); if (!active) return;
+  var all = PROGRAM.strength.concat(PROGRAM.cardio);
+  for (var i = 0; i < all.length; i++) { if (all[i].id === active.workoutId) { currentWorkout = all[i]; break; } }
+  if (!currentWorkout) return;
+  workoutStartTime = active.startTime; sessionData = active.sessionData || {}; sessionNote = active.sessionNote || ''; previewMode = false;
+  document.getElementById('wo-title').textContent = currentWorkout.name;
+  document.getElementById('wo-date').textContent = fmtDate(new Date());
+  buildWorkoutScreen(false);
+  var exIds = Object.keys(sessionData);
+  for (var ei = 0; ei < exIds.length; ei++) {
+    var exId = exIds[ei]; var sets = sessionData[exId]; var keys = Object.keys(sets);
+    for (var ki = 0; ki < keys.length; ki++) {
+      var idx = keys[ki]; var s = sets[idx];
+      var kgEl = document.getElementById('kg-' + exId + '-' + idx);
+      var rpsEl = document.getElementById('reps-' + exId + '-' + idx);
+      var rpeEl = document.getElementById('rpe-' + exId + '-' + idx);
+      if (kgEl && s.kg) kgEl.value = s.kg;
+      if (rpsEl && s.reps) rpsEl.value = s.reps;
+      if (rpeEl && s.rpe) rpeEl.value = s.rpe;
+      if (s.done) {
+        var chk = document.getElementById('check-' + exId + '-' + idx);
+        var row = document.getElementById('set-row-' + exId + '-' + idx);
+        if (chk) chk.classList.add('done');
+        if (row) row.classList.add('set-done');
+      }
+    }
+    var ex = findEx(exId);
+    if (ex) {
+      var allDone = true;
+      for (var si = 0; si < ex.sets; si++) {
+        if (!sessionData[exId][si] || !sessionData[exId][si].done) { allDone = false; break; }
+      }
+      if (allDone) {
+        var card = document.getElementById('ex-card-' + exId);
+        if (card) card.classList.add('completed');
+        var ic = document.getElementById('ex-status-' + exId);
+        if (ic) ic.textContent = '✅';
+      }
+    }
+  }
+  navigate('home', 'workout');
+  clearInterval(sessionTimer);
+  sessionTimer = setInterval(function() {
+    var el = document.getElementById('wo-timer-mini');
+    if (el) el.textContent = fmtSecs(Math.floor((Date.now() - workoutStartTime) / 1000));
+  }, 1000);
 }
 
-function discardSession() { clearSession(); var b = document.getElementById(‘resume-bar’); if (b) b.remove(); }
+function discardSession() { clearSession(); var b = document.getElementById('resume-bar'); if (b) b.remove(); }
 
-// ══ HISTORY ══
+// == HISTORY ==
 function buildHistory() {
-var h = getHistory(); var body = document.getElementById(‘history-body’);
-if (!h.length) { body.innerHTML = ‘<div class="history-empty"><div class="big">📋</div><div>Nenhum treino ainda.</div></div>’; return; }
-body.innerHTML = ‘’;
-// Consistency calendar
-var calLbl = document.createElement(‘div’); calLbl.className = ‘section-label’; calLbl.textContent = ‘Consistência — 13 semanas’; body.appendChild(calLbl);
-var calGrid = document.createElement(‘div’); calGrid.className = ‘cal-grid’;
-var today = new Date(); today.setHours(0, 0, 0, 0);
-for (var ci = 90; ci >= 0; ci–) {
-var d = new Date(today); d.setDate(today.getDate() - ci);
-var ds = d.toISOString().split(‘T’)[0];
-var sessions = [];
-for (var hi = 0; hi < h.length; hi++) { if (h[hi].date.indexOf(ds) === 0) sessions.push(h[hi]); }
-var cls = ‘cal-cell’;
-if (sessions.length > 0) {
-var isComplete = sessions[0].completedEx >= sessions[0].totalEx;
-cls += isComplete ? ’ done-full’ : ’ done-part’;
-}
-if (ci === 0) cls += ’ today’;
-calGrid.innerHTML += ‘<div class="' + cls + '"></div>’;
-}
-body.appendChild(calGrid);
-var calLegend = document.createElement(‘div’); calLegend.className = ‘cal-legend’;
-calLegend.innerHTML = ‘<div class="cal-dot" style="background:#27ae60"></div>Completo  <div class="cal-dot" style="background:#c8a96e"></div>Parcial  <div class="cal-dot" style="background:#1a1a1a;border:1px solid #333"></div>Sem treino’;
-body.appendChild(calLegend);
-var lbl = document.createElement(‘div’); lbl.className = ‘section-label’;
-lbl.textContent = h.length + ’ treino’ + (h.length !== 1 ? ‘s’ : ‘’) + ’ registrado’ + (h.length !== 1 ? ‘s’ : ‘’);
-body.appendChild(lbl);
-var expBtn = document.createElement(‘button’); expBtn.className = ‘export-btn’;
-expBtn.innerHTML = ‘📤 Exportar histórico (JSON)’; expBtn.onclick = exportData; body.appendChild(expBtn);
-for (var si = 0; si < h.length; si++) {
-var entry = h[si];
-var card = document.createElement(‘div’); card.className = ‘session-card’;
-var prev = ‘’;
-var eids = Object.keys(entry.sets);
-for (var ei = 0; ei < eids.length; ei++) {
-var exId = eids[ei]; var ex = findEx(exId); if (!ex) continue;
-var sets = entry.sets[exId]; var keys = Object.keys(sets);
-var done = 0; var wts = [];
-for (var ki = 0; ki < keys.length; ki++) {
-if (sets[keys[ki]].done) done++;
-if (sets[keys[ki]].kg) {
-var kgStr = sets[keys[ki]].kg + ‘kg’;
-var found = false;
-for (var wti = 0; wti < wts.length; wti++) { if (wts[wti] === kgStr) { found = true; break; } }
-if (!found) wts.push(kgStr);
-}
-}
-if (done > 0) prev += ‘<span style="color:#e8e2d8">’ + ex.name + ‘</span>: ’ + done + ‘×’ + (wts.length ? ’ ’ + wts.join(’/’) : ‘’) + ’  ‘;
-}
-var vol = calcSessionVol(entry);
-card.innerHTML = ‘<div class="session-date">’ + fmtDateFull(entry.date) + ‘</div>’
-+ ‘<div class="session-title">’ + entry.workoutName + ‘</div>’
-+ ‘<div class="session-stats">’
-+ ‘<div class="session-stat">⏱ <strong>’ + entry.duration + ’ min</strong></div>’
-+ ‘<div class="session-stat">✅ <strong>’ + (entry.completedEx || ‘?’) + ‘/’ + (entry.totalEx || ‘?’) + ’ ex.</strong></div>’
-+ ‘<div class="session-stat">📦 <strong>’ + vol + ’ kg</strong></div>’
-+ ‘</div>’
-+ (prev ? ‘<div class="session-sets-preview">’ + prev + ‘</div>’ : ‘’)
-+ (entry.note ? ’<div class="session-sets-preview" style="font-style:italic;color:#666">💬 ’ + entry.note + ‘</div>’ : ‘’);
-body.appendChild(card);
-}
+  var h = getHistory(); var body = document.getElementById('history-body');
+  if (!h.length) { body.innerHTML = '<div class="history-empty"><div class="big">📋<\/div><div>Nenhum treino ainda.<\/div><\/div>'; return; }
+  body.innerHTML = '';
+  // Consistency calendar
+  var calLbl = document.createElement('div'); calLbl.className = 'section-label'; calLbl.textContent = 'Consistência — 13 semanas'; body.appendChild(calLbl);
+  var calGrid = document.createElement('div'); calGrid.className = 'cal-grid';
+  var today = new Date(); today.setHours(0, 0, 0, 0);
+  for (var ci = 90; ci >= 0; ci--) {
+    var d = new Date(today); d.setDate(today.getDate() - ci);
+    var ds = d.toISOString().split('T')[0];
+    var sessions = [];
+    for (var hi = 0; hi < h.length; hi++) { if (h[hi].date.indexOf(ds) === 0) sessions.push(h[hi]); }
+    var cls = 'cal-cell';
+    if (sessions.length > 0) {
+      var isComplete = sessions[0].completedEx >= sessions[0].totalEx;
+      cls += isComplete ? ' done-full' : ' done-part';
+    }
+    if (ci === 0) cls += ' today';
+    calGrid.innerHTML += '<div class="' + cls + '"><\/div>';
+  }
+  body.appendChild(calGrid);
+  var calLegend = document.createElement('div'); calLegend.className = 'cal-legend';
+  calLegend.innerHTML = '<div class="cal-dot" style="background:#27ae60"><\/div>Completo&nbsp;&nbsp;<div class="cal-dot" style="background:#c8a96e"><\/div>Parcial&nbsp;&nbsp;<div class="cal-dot" style="background:#1a1a1a;border:1px solid #333"><\/div>Sem treino';
+  body.appendChild(calLegend);
+  var lbl = document.createElement('div'); lbl.className = 'section-label';
+  lbl.textContent = h.length + ' treino' + (h.length !== 1 ? 's' : '') + ' registrado' + (h.length !== 1 ? 's' : '');
+  body.appendChild(lbl);
+  var expBtn = document.createElement('button'); expBtn.className = 'export-btn';
+  expBtn.innerHTML = '📤 Exportar histórico (JSON)'; expBtn.onclick = exportData; body.appendChild(expBtn);
+  for (var si = 0; si < h.length; si++) {
+    var entry = h[si];
+    var card = document.createElement('div'); card.className = 'session-card';
+    var prev = '';
+    var eids = Object.keys(entry.sets);
+    for (var ei = 0; ei < eids.length; ei++) {
+      var exId = eids[ei]; var ex = findEx(exId); if (!ex) continue;
+      var sets = entry.sets[exId]; var keys = Object.keys(sets);
+      var done = 0; var wts = [];
+      for (var ki = 0; ki < keys.length; ki++) {
+        if (sets[keys[ki]].done) done++;
+        if (sets[keys[ki]].kg) {
+          var kgStr = sets[keys[ki]].kg + 'kg';
+          var found = false;
+          for (var wti = 0; wti < wts.length; wti++) { if (wts[wti] === kgStr) { found = true; break; } }
+          if (!found) wts.push(kgStr);
+        }
+      }
+      if (done > 0) prev += '<span style="color:#e8e2d8">' + ex.name + '<\/span>: ' + done + '×' + (wts.length ? ' ' + wts.join('/') : '') + '  ';
+    }
+    var vol = calcSessionVol(entry);
+    card.innerHTML = '<div class="session-date">' + fmtDateFull(entry.date) + '<\/div>'
+      + '<div class="session-title">' + entry.workoutName + '<\/div>'
+      + '<div class="session-stats">'
+        + '<div class="session-stat">⏱ <strong>' + entry.duration + ' min<\/strong><\/div>'
+        + '<div class="session-stat">✅ <strong>' + (entry.completedEx || '?') + '/' + (entry.totalEx || '?') + ' ex.<\/strong><\/div>'
+        + '<div class="session-stat">📦 <strong>' + vol + ' kg<\/strong><\/div>'
+      + '<\/div>'
+      + (prev ? '<div class="session-sets-preview">' + prev + '<\/div>' : '')
+      + (entry.note ? '<div class="session-sets-preview" style="font-style:italic;color:#666">💬 ' + entry.note + '<\/div>' : '');
+    body.appendChild(card);
+  }
 }
 
 function exportData() {
-try {
-var data = { history: getHistory(), prs: getPRs(), bodyWeight: getBWLog(), exportDate: new Date().toISOString() };
-var json = JSON.stringify(data, null, 2);
-var blob = new Blob([json], { type: ‘application/json’ });
-var url = URL.createObjectURL(blob);
-var a = document.createElement(‘a’); a.href = url;
-a.download = ‘treino-’ + new Date().toISOString().split(‘T’)[0] + ‘.json’;
-document.body.appendChild(a); a.click(); document.body.removeChild(a);
-URL.revokeObjectURL(url);
-showToast(‘Exportado!’);
-} catch(e) { showToast(‘Erro ao exportar’); }
+  try {
+    var data = { history: getHistory(), prs: getPRs(), bodyWeight: getBWLog(), exportDate: new Date().toISOString() };
+    var json = JSON.stringify(data, null, 2);
+    var blob = new Blob([json], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href = url;
+    a.download = 'treino-' + new Date().toISOString().split('T')[0] + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Exportado!');
+  } catch(e) { showToast('Erro ao exportar'); }
 }
 
-// ══ PROGRESS ══
+// == PROGRESS ==
 function buildProgress() {
-var prs = getPRs(); var body = document.getElementById(‘progress-body’);
-if (!Object.keys(prs).length) { body.innerHTML = ‘<div class="history-empty"><div class="big">📈</div><div>Complete treinos para ver seus PRs!</div></div>’; return; }
-body.innerHTML = ‘’;
-var bwLog = getBWLog();
-if (bwLog.length >= 2) {
-var bwLbl = document.createElement(‘div’); bwLbl.className = ‘section-label’; bwLbl.textContent = ‘Peso Corporal’; body.appendChild(bwLbl);
-var bwChart = document.createElement(‘div’); bwChart.className = ‘chart-container’;
-var pts = bwLog.slice(0, 12).reverse();
-var maxBW = pts[0].kg; var minBW = pts[0].kg;
-for (var bi = 1; bi < pts.length; bi++) { if (pts[bi].kg > maxBW) maxBW = pts[bi].kg; if (pts[bi].kg < minBW) minBW = pts[bi].kg; }
-var rangeBW = maxBW - minBW || 1;
-var bwDiff = (bwLog[0].kg - bwLog[Math.min(bwLog.length - 1, 11)].kg).toFixed(1);
-var bwSign = bwDiff > 0 ? ‘+’ : ‘’;
-var bars = ‘’;
-for (var bpi = 0; bpi < pts.length; bpi++) {
-var h2 = Math.max(8, ((pts[bpi].kg - minBW) / rangeBW) * 100);
-var hl = (bpi === pts.length - 1) ? ’ highlight bw-chart-bar’ : ’ bw-chart-bar’;
-bars += ‘<div class="chart-bar' + hl + '" style="height:' + h2 + '%"></div>’;
-}
-bwChart.innerHTML = ‘<div class="chart-title-row"><div class="chart-title-main">Peso corporal</div><div class="chart-title-delta">’ + bwSign + bwDiff + ’ kg</div></div>’
-+ ‘<div class="mini-chart">’ + bars + ‘</div>’;
-body.appendChild(bwChart);
-}
-var lbl = document.createElement(‘div’); lbl.className = ‘section-label’; lbl.textContent = ‘Recordes Pessoais · 1RM Estimado’; body.appendChild(lbl);
-var keyLifts = [‘squat’, ‘deadlift’, ‘bench’, ‘rdl’, ‘hip-thrust’, ‘pullup’];
-var grid = document.createElement(‘div’); grid.className = ‘progress-grid’;
-for (var ki = 0; ki < keyLifts.length; ki++) {
-var kId = keyLifts[ki]; if (!prs[kId]) continue;
-var kEx = findEx(kId); if (!kEx) continue;
-var pr = prs[kId]; var oneRM = estimate1RM(pr.kg, pr.reps);
-var c = document.createElement(‘div’); c.className = ‘progress-card’;
-c.innerHTML = ‘<div class="ex-name">’ + kEx.name + ’ <span class="pr-badge">PR</span></div>’
-+ ‘<div class="pr-val">’ + pr.kg + ‘<span class="pr-unit"> kg</span></div>’
-+ ‘<div class="pr-1rm">1RM est. ’ + oneRM + ’ kg · ’ + pr.reps + ’ reps</div>’
-+ ‘<div class="pr-date">’ + fmtDate(pr.date) + ‘</div>’;
-grid.appendChild(c);
-}
-body.appendChild(grid);
-var history = getHistory();
-var liftKeys = [‘squat’, ‘deadlift’, ‘bench’];
-for (var li = 0; li < liftKeys.length; li++) {
-var lId = liftKeys[li]; var lEx = findEx(lId); if (!lEx) continue;
-var lPts = [];
-for (var hi = 0; hi < history.length && lPts.length < 8; hi++) {
-if (!history[hi].sets || !history[hi].sets[lId]) continue;
-var lSets = history[hi].sets[lId]; var lKeys = Object.keys(lSets); var lMaxKg = 0;
-for (var lk = 0; lk < lKeys.length; lk++) { var lkg = parseFloat(lSets[lKeys[lk]].kg) || 0; if (lkg > lMaxKg) lMaxKg = lkg; }
-if (lMaxKg > 0) lPts.push(lMaxKg);
-}
-lPts.reverse();
-if (lPts.length < 2) continue;
-var lMax = lPts[0]; var lMin = lPts[0];
-for (var lpi = 1; lpi < lPts.length; lpi++) { if (lPts[lpi] > lMax) lMax = lPts[lpi]; if (lPts[lpi] < lMin) lMin = lPts[lpi]; }
-var lRange = lMax - lMin || 1;
-var lDiff = (lPts[lPts.length - 1] - lPts[0]).toFixed(1); var lSign = lDiff > 0 ? ‘+’ : ‘’;
-var lBars = ‘’;
-for (var lbi = 0; lbi < lPts.length; lbi++) {
-var lh = Math.max(8, ((lPts[lbi] - lMin) / lRange) * 100);
-var lhl = (lbi === lPts.length - 1) ? ’ highlight’ : ‘’;
-lBars += ‘<div class="chart-bar' + lhl + '" style="height:' + lh + '%"></div>’;
-}
-var lChart = document.createElement(‘div’); lChart.className = ‘chart-container’;
-lChart.innerHTML = ‘<div class="chart-title-row"><div class="chart-title-main">’ + lEx.name + ’ — carga max.</div><div class="chart-title-delta">’ + lSign + lDiff + ’ kg</div></div>’
-+ ‘<div class="mini-chart">’ + lBars + ‘</div>’;
-body.appendChild(lChart);
-}
-var lbl2 = document.createElement(‘div’); lbl2.className = ‘section-label’; lbl2.textContent = ‘Todos os Exercícios’; body.appendChild(lbl2);
-var grid2 = document.createElement(‘div’); grid2.className = ‘progress-grid’;
-var prKeys = Object.keys(prs);
-for (var pi = 0; pi < prKeys.length; pi++) {
-var pId = prKeys[pi]; var pEx = findEx(pId);
-if (!pEx) continue; var isKey = false;
-for (var pk = 0; pk < keyLifts.length; pk++) { if (keyLifts[pk] === pId) { isKey = true; break; } }
-if (isKey) continue;
-var pPr = prs[pId]; var pOneRM = estimate1RM(pPr.kg, pPr.reps);
-var pC = document.createElement(‘div’); pC.className = ‘progress-card’;
-pC.innerHTML = ‘<div class="ex-name">’ + pEx.name + ‘</div>’
-+ ‘<div class="pr-val">’ + pPr.kg + ‘<span class="pr-unit"> kg</span></div>’
-+ ‘<div class="pr-1rm">1RM est. ’ + pOneRM + ’ kg</div>’
-+ ‘<div class="pr-date">’ + fmtDate(pPr.date) + ‘</div>’;
-grid2.appendChild(pC);
-}
-body.appendChild(grid2);
+  var prs = getPRs(); var body = document.getElementById('progress-body');
+  if (!Object.keys(prs).length) { body.innerHTML = '<div class="history-empty"><div class="big">📈<\/div><div>Complete treinos para ver seus PRs!<\/div><\/div>'; return; }
+  body.innerHTML = '';
+  var bwLog = getBWLog();
+  if (bwLog.length >= 2) {
+    var bwLbl = document.createElement('div'); bwLbl.className = 'section-label'; bwLbl.textContent = 'Peso Corporal'; body.appendChild(bwLbl);
+    var bwChart = document.createElement('div'); bwChart.className = 'chart-container';
+    var pts = bwLog.slice(0, 12).reverse();
+    var maxBW = pts[0].kg; var minBW = pts[0].kg;
+    for (var bi = 1; bi < pts.length; bi++) { if (pts[bi].kg > maxBW) maxBW = pts[bi].kg; if (pts[bi].kg < minBW) minBW = pts[bi].kg; }
+    var rangeBW = maxBW - minBW || 1;
+    var bwDiff = (bwLog[0].kg - bwLog[Math.min(bwLog.length - 1, 11)].kg).toFixed(1);
+    var bwSign = bwDiff > 0 ? '+' : '';
+    var bars = '';
+    for (var bpi = 0; bpi < pts.length; bpi++) {
+      var h2 = Math.max(8, ((pts[bpi].kg - minBW) / rangeBW) * 100);
+      var hl = (bpi === pts.length - 1) ? ' highlight bw-chart-bar' : ' bw-chart-bar';
+      bars += '<div class="chart-bar' + hl + '" style="height:' + h2 + '%"><\/div>';
+    }
+    bwChart.innerHTML = '<div class="chart-title-row"><div class="chart-title-main">Peso corporal<\/div><div class="chart-title-delta">' + bwSign + bwDiff + ' kg<\/div><\/div>'
+      + '<div class="mini-chart">' + bars + '<\/div>';
+    body.appendChild(bwChart);
+  }
+  var lbl = document.createElement('div'); lbl.className = 'section-label'; lbl.textContent = 'Recordes Pessoais · 1RM Estimado'; body.appendChild(lbl);
+  var keyLifts = ['squat', 'deadlift', 'bench', 'rdl', 'hip-thrust', 'pullup'];
+  var grid = document.createElement('div'); grid.className = 'progress-grid';
+  for (var ki = 0; ki < keyLifts.length; ki++) {
+    var kId = keyLifts[ki]; if (!prs[kId]) continue;
+    var kEx = findEx(kId); if (!kEx) continue;
+    var pr = prs[kId]; var oneRM = estimate1RM(pr.kg, pr.reps);
+    var c = document.createElement('div'); c.className = 'progress-card';
+    c.innerHTML = '<div class="ex-name">' + kEx.name + ' <span class="pr-badge">PR<\/span><\/div>'
+      + '<div class="pr-val">' + pr.kg + '<span class="pr-unit"> kg<\/span><\/div>'
+      + '<div class="pr-1rm">1RM est. ' + oneRM + ' kg · ' + pr.reps + ' reps<\/div>'
+      + '<div class="pr-date">' + fmtDate(pr.date) + '<\/div>';
+    grid.appendChild(c);
+  }
+  body.appendChild(grid);
+  var history = getHistory();
+  var liftKeys = ['squat', 'deadlift', 'bench'];
+  for (var li = 0; li < liftKeys.length; li++) {
+    var lId = liftKeys[li]; var lEx = findEx(lId); if (!lEx) continue;
+    var lPts = [];
+    for (var hi = 0; hi < history.length && lPts.length < 8; hi++) {
+      if (!history[hi].sets || !history[hi].sets[lId]) continue;
+      var lSets = history[hi].sets[lId]; var lKeys = Object.keys(lSets); var lMaxKg = 0;
+      for (var lk = 0; lk < lKeys.length; lk++) { var lkg = parseFloat(lSets[lKeys[lk]].kg) || 0; if (lkg > lMaxKg) lMaxKg = lkg; }
+      if (lMaxKg > 0) lPts.push(lMaxKg);
+    }
+    lPts.reverse();
+    if (lPts.length < 2) continue;
+    var lMax = lPts[0]; var lMin = lPts[0];
+    for (var lpi = 1; lpi < lPts.length; lpi++) { if (lPts[lpi] > lMax) lMax = lPts[lpi]; if (lPts[lpi] < lMin) lMin = lPts[lpi]; }
+    var lRange = lMax - lMin || 1;
+    var lDiff = (lPts[lPts.length - 1] - lPts[0]).toFixed(1); var lSign = lDiff > 0 ? '+' : '';
+    var lBars = '';
+    for (var lbi = 0; lbi < lPts.length; lbi++) {
+      var lh = Math.max(8, ((lPts[lbi] - lMin) / lRange) * 100);
+      var lhl = (lbi === lPts.length - 1) ? ' highlight' : '';
+      lBars += '<div class="chart-bar' + lhl + '" style="height:' + lh + '%"><\/div>';
+    }
+    var lChart = document.createElement('div'); lChart.className = 'chart-container';
+    lChart.innerHTML = '<div class="chart-title-row"><div class="chart-title-main">' + lEx.name + ' — carga max.<\/div><div class="chart-title-delta">' + lSign + lDiff + ' kg<\/div><\/div>'
+      + '<div class="mini-chart">' + lBars + '<\/div>';
+    body.appendChild(lChart);
+  }
+  var lbl2 = document.createElement('div'); lbl2.className = 'section-label'; lbl2.textContent = 'Todos os Exercícios'; body.appendChild(lbl2);
+  var grid2 = document.createElement('div'); grid2.className = 'progress-grid';
+  var prKeys = Object.keys(prs);
+  for (var pi = 0; pi < prKeys.length; pi++) {
+    var pId = prKeys[pi]; var pEx = findEx(pId);
+    if (!pEx) continue; var isKey = false;
+    for (var pk = 0; pk < keyLifts.length; pk++) { if (keyLifts[pk] === pId) { isKey = true; break; } }
+    if (isKey) continue;
+    var pPr = prs[pId]; var pOneRM = estimate1RM(pPr.kg, pPr.reps);
+    var pC = document.createElement('div'); pC.className = 'progress-card';
+    pC.innerHTML = '<div class="ex-name">' + pEx.name + '<\/div>'
+      + '<div class="pr-val">' + pPr.kg + '<span class="pr-unit"> kg<\/span><\/div>'
+      + '<div class="pr-1rm">1RM est. ' + pOneRM + ' kg<\/div>'
+      + '<div class="pr-date">' + fmtDate(pPr.date) + '<\/div>';
+    grid2.appendChild(pC);
+  }
+  body.appendChild(grid2);
 }
 
-// ══ PLAN ══
+// == PLAN ==
 function buildPlan() {
-var body = document.getElementById(‘plan-body’); body.innerHTML = ‘’;
-var hero = document.createElement(‘div’); hero.className = ‘plan-hero’;
-hero.innerHTML = ‘<div class="plan-hero-title">Programa 12 Semanas</div><div class="plan-hero-sub">Força · Performance · Composição Corporal<br>Homem · 39 anos · Dieta Carnívora</div>’;
-body.appendChild(hero);
-var wlbl = document.createElement(‘div’); wlbl.className = ‘section-label’; wlbl.textContent = ‘Estrutura Semanal’; body.appendChild(wlbl);
-var weekGrid = document.createElement(‘div’); weekGrid.className = ‘plan-week’;
-var days = [
-{n:‘Seg’,icon:‘💪’,label:‘Upper A’},{n:‘Ter’,icon:‘🦵’,label:‘Lower A’},
-{n:‘Qua’,icon:‘🚴’,label:‘Zone 2’},{n:‘Qui’,icon:‘🔝’,label:‘Upper B’},
-{n:‘Sex’,icon:‘🏋’,label:‘Lower B’},{n:‘Sáb’,icon:‘⚡’,label:‘HIIT’},
-{n:‘Dom’,icon:‘🧘’,label:‘Flex.’}
-];
-for (var di = 0; di < days.length; di++) {
-weekGrid.innerHTML += ‘<div class="plan-day-col"><div class="plan-day-name">’ + days[di].n + ‘</div>’
-+ ‘<div class="plan-day-icon">’ + days[di].icon + ‘</div>’
-+ ‘<div class="plan-day-label">’ + days[di].label + ‘</div></div>’;
-}
-body.appendChild(weekGrid);
-var wnote = document.createElement(‘div’); wnote.style.cssText = ‘margin:4px 20px 12px;font-size:11px;color:#555;line-height:1.5;’;
-wnote.textContent = ‘HIIT e Zone 2 são opcionais. HIIT somente a partir da semana 5.’; body.appendChild(wnote);
-mkInfoCard(body,‘📅’,‘Fases de Progressão’,[{dot:’’,html:’<div class="phase-row"><div class="phase-label">Semanas 1-4 · Adaptação</div><div class="phase-desc">Cargas a 60-70% do 1RM estimado. Foco absoluto em técnica.</div></div><div class="phase-row"><div class="phase-label">Semanas 5-8 · Progressão</div><div class="phase-desc">+2,5 kg/semana nos principais quando todas as séries completadas.</div></div><div class="phase-row"><div class="phase-label">Semanas 9-11 · Intensificação</div><div class="phase-desc">Intensidade acima de 85% do 1RM. Foco em força máxima.</div></div><div class="phase-row"><div class="phase-label">Semana 12 · Deload obrigatório</div><div class="phase-desc">Volume -40%, intensidade -20%. Recuperação ativa. Prepara para o próximo ciclo.</div></div>’}],true);
-mkInfoCard(body,‘⚙️’,‘Premissas do Treino’,[{dot:’’,html:’<div class="info-row"><div class="info-dot"></div><div class="info-text"><strong>Técnica antes do peso.</strong> Nunca sacrificar execução por carga.</div></div><div class="info-row"><div class="info-dot"></div><div class="info-text"><strong>Progressão dupla:</strong> primeiro aumente reps até o teto, depois aumente carga e volte ao piso.</div></div><div class="info-row"><div class="info-dot"></div><div class="info-text"><strong>RPE como guia:</strong> séries principais devem terminar em RPE 7-8. Se chegar a 9-10, reduza a carga.</div></div><div class="info-row"><div class="info-dot"></div><div class="info-text"><strong>Zone 2:</strong> FC 108-126 bpm. Falar frases completas sem pausar.</div></div><div class="info-row"><div class="info-dot"></div><div class="info-text"><strong>Aquecimento incluso</strong> no topo de cada sessão. Nunca pule.</div></div>’}]);
-mkInfoCard(body,‘🥩’,‘Nutrição · Dieta Carnívora’,[{dot:’’,html:’<div class="info-row"><div class="info-dot green"></div><div class="info-text"><strong>Proteína:</strong> 1,8-2,2 g/kg/dia. Carnes vermelhas, ovos, peixes gordurosos.</div></div><div class="info-row"><div class="info-dot green"></div><div class="info-text"><strong>Gordura animal:</strong> manter alta — matéria-prima para testosterona. Não restringir.</div></div><div class="info-row"><div class="info-dot green"></div><div class="info-text"><strong>Timing:</strong> refeição 1,5-2h antes. Proteína dentro de 1h após o treino.</div></div><div class="info-row"><div class="info-dot blue"></div><div class="info-text"><strong>Hidratação:</strong> 35-40 ml/kg/dia. Eletrólitos críticos na dieta carnívora.</div></div>’}]);
-mkInfoCard(body,‘💊’,‘Suplementação’,[{dot:’’,html:’<div class="suppl-grid"><div class="suppl-chip"><div class="suppl-name">Creatina</div><div class="suppl-dose">5 g/dia</div><div class="suppl-when">Qualquer horário</div></div><div class="suppl-chip"><div class="suppl-name">D3+K2</div><div class="suppl-dose">2.000-5.000 UI</div><div class="suppl-when">Com gordura</div></div><div class="suppl-chip"><div class="suppl-name">Magnésio Glicinato</div><div class="suppl-dose">300-400 mg</div><div class="suppl-when">À noite</div></div><div class="suppl-chip"><div class="suppl-name">Zinco</div><div class="suppl-dose">15-30 mg</div><div class="suppl-when">Longe das refeições</div></div><div class="suppl-chip"><div class="suppl-name">Ômega 3</div><div class="suppl-dose">2-4 g EPA+DHA</div><div class="suppl-when">Com refeição</div></div><div class="suppl-chip"><div class="suppl-name">Proteína</div><div class="suppl-dose">Complementar meta</div><div class="suppl-when">Pós-treino/noite</div></div></div>’}],true);
-mkInfoCard(body,‘😴’,‘Recuperação e Sono’,[{dot:’’,html:’<div class="info-row"><div class="info-dot"></div><div class="info-text"><strong>Sono 7-9h:</strong> onde o músculo cresce. Magnésio à noite melhora qualidade.</div></div><div class="info-row"><div class="info-dot red"></div><div class="info-text"><strong>Overtraining:</strong> queda de performance, sono ruim, irritabilidade, libido reduzida — deload imediato.</div></div><div class="info-row"><div class="info-dot"></div><div class="info-text"><strong>Domingo de mobilidade</strong> reduz DOMS e mantém articulações saudáveis.</div></div>’}]);
-mkInfoCard(body,‘🎯’,‘Objetivos e Expectativas’,[{dot:’’,html:’<div class="info-row"><div class="info-dot green"></div><div class="info-text"><strong>Força:</strong> ganhos expressivos nas primeiras 8 semanas (adaptação neuromuscular).</div></div><div class="info-row"><div class="info-dot green"></div><div class="info-text"><strong>Composição:</strong> redução de gordura visceral visível em 6-8 semanas com consistência.</div></div><div class="info-row"><div class="info-dot blue"></div><div class="info-text"><strong>Consistência acima de perfeição.</strong> 80% de aderência por 12 semanas supera qualquer programa feito pela metade.</div></div>’}]);
+  var body = document.getElementById('plan-body'); body.innerHTML = '';
+  var hero = document.createElement('div'); hero.className = 'plan-hero';
+  hero.innerHTML = '<div class="plan-hero-title">Programa 12 Semanas<\/div><div class="plan-hero-sub">Força · Performance · Composição Corporal<br>Homem · 39 anos · Dieta Carnívora<\/div>';
+  body.appendChild(hero);
+  var wlbl = document.createElement('div'); wlbl.className = 'section-label'; wlbl.textContent = 'Estrutura Semanal'; body.appendChild(wlbl);
+  var weekGrid = document.createElement('div'); weekGrid.className = 'plan-week';
+  var days = [
+    {n:'Seg',icon:'💪',label:'Upper A'},{n:'Ter',icon:'🦵',label:'Lower A'},
+    {n:'Qua',icon:'🚴',label:'Zone 2'},{n:'Qui',icon:'🔝',label:'Upper B'},
+    {n:'Sex',icon:'🏋',label:'Lower B'},{n:'Sáb',icon:'⚡',label:'HIIT'},
+    {n:'Dom',icon:'🧘',label:'Flex.'}
+  ];
+  for (var di = 0; di < days.length; di++) {
+    weekGrid.innerHTML += '<div class="plan-day-col"><div class="plan-day-name">' + days[di].n + '<\/div>'
+      + '<div class="plan-day-icon">' + days[di].icon + '<\/div>'
+      + '<div class="plan-day-label">' + days[di].label + '<\/div><\/div>';
+  }
+  body.appendChild(weekGrid);
+  var wnote = document.createElement('div'); wnote.style.cssText = 'margin:4px 20px 12px;font-size:11px;color:#555;line-height:1.5;';
+  wnote.textContent = 'HIIT e Zone 2 são opcionais. HIIT somente a partir da semana 5.'; body.appendChild(wnote);
+  mkInfoCard(body,'📅','Fases de Progressão',[{dot:'',html:'<div class="phase-row"><div class="phase-label">Semanas 1-4 · Adaptação<\/div><div class="phase-desc">Cargas a 60-70% do 1RM estimado. Foco absoluto em técnica.<\/div><\/div><div class="phase-row"><div class="phase-label">Semanas 5-8 · Progressão<\/div><div class="phase-desc">+2,5 kg/semana nos principais quando todas as séries completadas.<\/div><\/div><div class="phase-row"><div class="phase-label">Semanas 9-11 · Intensificação<\/div><div class="phase-desc">Intensidade acima de 85% do 1RM. Foco em força máxima.<\/div><\/div><div class="phase-row"><div class="phase-label">Semana 12 · Deload obrigatório<\/div><div class="phase-desc">Volume -40%, intensidade -20%. Recuperação ativa. Prepara para o próximo ciclo.<\/div><\/div>'}],true);
+  mkInfoCard(body,'⚙️','Premissas do Treino',[{dot:'',html:'<div class="info-row"><div class="info-dot"><\/div><div class="info-text"><strong>Técnica antes do peso.<\/strong> Nunca sacrificar execução por carga.<\/div><\/div><div class="info-row"><div class="info-dot"><\/div><div class="info-text"><strong>Progressão dupla:<\/strong> primeiro aumente reps até o teto, depois aumente carga e volte ao piso.<\/div><\/div><div class="info-row"><div class="info-dot"><\/div><div class="info-text"><strong>RPE como guia:<\/strong> séries principais devem terminar em RPE 7-8. Se chegar a 9-10, reduza a carga.<\/div><\/div><div class="info-row"><div class="info-dot"><\/div><div class="info-text"><strong>Zone 2:<\/strong> FC 108-126 bpm. Falar frases completas sem pausar.<\/div><\/div><div class="info-row"><div class="info-dot"><\/div><div class="info-text"><strong>Aquecimento incluso<\/strong> no topo de cada sessão. Nunca pule.<\/div><\/div>'}]);
+  mkInfoCard(body,'🥩','Nutrição · Dieta Carnívora',[{dot:'',html:'<div class="info-row"><div class="info-dot green"><\/div><div class="info-text"><strong>Proteína:<\/strong> 1,8-2,2 g/kg/dia. Carnes vermelhas, ovos, peixes gordurosos.<\/div><\/div><div class="info-row"><div class="info-dot green"><\/div><div class="info-text"><strong>Gordura animal:<\/strong> manter alta — matéria-prima para testosterona. Não restringir.<\/div><\/div><div class="info-row"><div class="info-dot green"><\/div><div class="info-text"><strong>Timing:<\/strong> refeição 1,5-2h antes. Proteína dentro de 1h após o treino.<\/div><\/div><div class="info-row"><div class="info-dot blue"><\/div><div class="info-text"><strong>Hidratação:<\/strong> 35-40 ml/kg/dia. Eletrólitos críticos na dieta carnívora.<\/div><\/div>'}]);
+  mkInfoCard(body,'💊','Suplementação',[{dot:'',html:'<div class="suppl-grid"><div class="suppl-chip"><div class="suppl-name">Creatina<\/div><div class="suppl-dose">5 g/dia<\/div><div class="suppl-when">Qualquer horário<\/div><\/div><div class="suppl-chip"><div class="suppl-name">D3+K2<\/div><div class="suppl-dose">2.000-5.000 UI<\/div><div class="suppl-when">Com gordura<\/div><\/div><div class="suppl-chip"><div class="suppl-name">Magnésio Glicinato<\/div><div class="suppl-dose">300-400 mg<\/div><div class="suppl-when">À noite<\/div><\/div><div class="suppl-chip"><div class="suppl-name">Zinco<\/div><div class="suppl-dose">15-30 mg<\/div><div class="suppl-when">Longe das refeições<\/div><\/div><div class="suppl-chip"><div class="suppl-name">Ômega 3<\/div><div class="suppl-dose">2-4 g EPA+DHA<\/div><div class="suppl-when">Com refeição<\/div><\/div><div class="suppl-chip"><div class="suppl-name">Proteína<\/div><div class="suppl-dose">Complementar meta<\/div><div class="suppl-when">Pós-treino/noite<\/div><\/div><\/div>'}],true);
+  mkInfoCard(body,'😴','Recuperação e Sono',[{dot:'',html:'<div class="info-row"><div class="info-dot"><\/div><div class="info-text"><strong>Sono 7-9h:<\/strong> onde o músculo cresce. Magnésio à noite melhora qualidade.<\/div><\/div><div class="info-row"><div class="info-dot red"><\/div><div class="info-text"><strong>Overtraining:<\/strong> queda de performance, sono ruim, irritabilidade, libido reduzida — deload imediato.<\/div><\/div><div class="info-row"><div class="info-dot"><\/div><div class="info-text"><strong>Domingo de mobilidade<\/strong> reduz DOMS e mantém articulações saudáveis.<\/div><\/div>'}]);
+  mkInfoCard(body,'🎯','Objetivos e Expectativas',[{dot:'',html:'<div class="info-row"><div class="info-dot green"><\/div><div class="info-text"><strong>Força:<\/strong> ganhos expressivos nas primeiras 8 semanas (adaptação neuromuscular).<\/div><\/div><div class="info-row"><div class="info-dot green"><\/div><div class="info-text"><strong>Composição:<\/strong> redução de gordura visceral visível em 6-8 semanas com consistência.<\/div><\/div><div class="info-row"><div class="info-dot blue"><\/div><div class="info-text"><strong>Consistência acima de perfeição.<\/strong> 80% de aderência por 12 semanas supera qualquer programa feito pela metade.<\/div><\/div>'}]);
 }
 
 function mkInfoCard(body, icon, title, items, raw) {
-var card = document.createElement(‘div’); card.className = ‘info-card’;
-var hdr = document.createElement(‘div’); hdr.className = ‘info-card-header’;
-hdr.innerHTML = ‘<div class="info-card-icon">’ + icon + ‘</div><div class="info-card-title">’ + title + ‘</div><div class="info-card-chevron">›</div>’;
-hdr.onclick = function() { card.classList.toggle(‘open’); };
-var bdy = document.createElement(‘div’); bdy.className = ‘info-card-body’;
-if (raw) { bdy.innerHTML = items[0].html; }
-else { for (var i = 0; i < items.length; i++) { bdy.innerHTML += ‘<div class="info-row"><div class="info-dot' + (items[i].dot ? ' ' + items[i].dot : '') + '"></div><div class="info-text">’ + items[i].html + ‘</div></div>’; } }
-card.appendChild(hdr); card.appendChild(bdy); body.appendChild(card);
+  var card = document.createElement('div'); card.className = 'info-card';
+  var hdr = document.createElement('div'); hdr.className = 'info-card-header';
+  hdr.innerHTML = '<div class="info-card-icon">' + icon + '<\/div><div class="info-card-title">' + title + '<\/div><div class="info-card-chevron">›<\/div>';
+  hdr.onclick = function() { card.classList.toggle('open'); };
+  var bdy = document.createElement('div'); bdy.className = 'info-card-body';
+  if (raw) { bdy.innerHTML = items[0].html; }
+  else { for (var i = 0; i < items.length; i++) { bdy.innerHTML += '<div class="info-row"><div class="info-dot' + (items[i].dot ? ' ' + items[i].dot : '') + '"><\/div><div class="info-text">' + items[i].html + '<\/div><\/div>'; } }
+  card.appendChild(hdr); card.appendChild(bdy); body.appendChild(card);
 }
 
-// ══ NAVIGATION ══
-var currentScreen = ‘home’;
+// == NAVIGATION ==
+var currentScreen = 'home';
 function navigate(from, to) {
-var f = document.getElementById(‘screen-’ + from);
-var t = document.getElementById(‘screen-’ + to);
-f.classList.remove(‘active’); f.classList.add(‘slide-out’);
-setTimeout(function() { f.classList.remove(‘slide-out’); }, 300);
-t.classList.add(‘active’); currentScreen = to;
+  var f = document.getElementById('screen-' + from);
+  var t = document.getElementById('screen-' + to);
+  f.classList.remove('active'); f.classList.add('slide-out');
+  setTimeout(function() { f.classList.remove('slide-out'); }, 300);
+  t.classList.add('active'); currentScreen = to;
 }
-function goHome() { clearInterval(sessionTimer); skipTimer(); navigate(‘workout’, ‘home’); buildHome(); }
+function goHome() { clearInterval(sessionTimer); skipTimer(); navigate('workout', 'home'); buildHome(); }
 function showTab(tab) {
-var tabs = [‘home’, ‘plan’, ‘history’, ‘progress’];
-for (var i = 0; i < tabs.length; i++) { document.getElementById(‘screen-’ + tabs[i]).classList.remove(‘active’, ‘slide-out’); }
-if (tab === ‘history’) buildHistory();
-if (tab === ‘progress’) buildProgress();
-if (tab === ‘plan’) buildPlan();
-document.getElementById(‘screen-’ + tab).classList.add(‘active’);
-var btns = document.querySelectorAll(’.nav-btn’);
-for (var j = 0; j < btns.length; j++) {
-btns[j].classList.remove(‘active’);
-var oc = btns[j].getAttribute(‘onclick’);
-if (oc && oc.indexOf(tab) !== -1) btns[j].classList.add(‘active’);
-}
-currentScreen = tab;
+  var tabs = ['home', 'plan', 'history', 'progress'];
+  for (var i = 0; i < tabs.length; i++) { document.getElementById('screen-' + tabs[i]).classList.remove('active', 'slide-out'); }
+  if (tab === 'history') buildHistory();
+  if (tab === 'progress') buildProgress();
+  if (tab === 'plan') buildPlan();
+  document.getElementById('screen-' + tab).classList.add('active');
+  var btns = document.querySelectorAll('.nav-btn');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].classList.remove('active');
+    var oc = btns[j].getAttribute('onclick');
+    if (oc && oc.indexOf(tab) !== -1) btns[j].classList.add('active');
+  }
+  currentScreen = tab;
 }
 
-// ══ UTILS ══
-function fmtSecs(s) { return Math.floor(s / 60) + ‘:’ + (s % 60).toString().padStart(2, ‘0’); }
-function fmtDate(d) { return new Date(d).toLocaleDateString(‘pt-BR’, { day:‘2-digit’, month:‘2-digit’ }); }
-function fmtDateFull(d) { return new Date(d).toLocaleDateString(‘pt-BR’, { weekday:‘long’, day:‘2-digit’, month:‘long’ }); }
-function showToast(msg) { var t = document.getElementById(‘toast’); t.textContent = msg; t.classList.add(‘show’); setTimeout(function() { t.classList.remove(‘show’); }, 2500); }
+// == UTILS ==
+function fmtSecs(s) { return Math.floor(s / 60) + ':' + (s % 60).toString().padStart(2, '0'); }
+function fmtDate(d) { return new Date(d).toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' }); }
+function fmtDateFull(d) { return new Date(d).toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' }); }
+function showToast(msg) { var t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(function() { t.classList.remove('show'); }, 2500); }
 
-// ══ VISIBILITY CHANGE (background recovery) ══
-document.addEventListener(‘visibilitychange’, function() {
-if (document.visibilityState !== ‘visible’) return;
-if (workoutStartTime) {
-var el = document.getElementById(‘wo-timer-mini’);
-if (el) el.textContent = fmtSecs(Math.floor((Date.now() - workoutStartTime) / 1000));
-}
-if (restEndTime) {
-var remaining = Math.max(0, Math.round((restEndTime - Date.now()) / 1000));
-var disp = document.getElementById(‘timer-display’);
-var prog = document.getElementById(‘timer-progress’);
-var bar = document.getElementById(‘timer-bar’);
-if (remaining <= 0) {
-timerDone();
-} else {
-clearInterval(restTimer);
-if (disp) disp.textContent = fmtSecs(remaining);
-if (prog) prog.style.width = (remaining / restTotalSec * 100) + ‘%’;
-restTimer = setInterval(function() {
-var r = Math.max(0, Math.round((restEndTime - Date.now()) / 1000));
-if (disp) disp.textContent = fmtSecs(r);
-if (prog) prog.style.width = (r / restTotalSec * 100) + ‘%’;
-if (r <= 0) timerDone();
-}, 500);
-}
-}
+// == VISIBILITY CHANGE (background recovery) ==
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState !== 'visible') return;
+  if (workoutStartTime) {
+    var el = document.getElementById('wo-timer-mini');
+    if (el) el.textContent = fmtSecs(Math.floor((Date.now() - workoutStartTime) / 1000));
+  }
+  if (restEndTime) {
+    var remaining = Math.max(0, Math.round((restEndTime - Date.now()) / 1000));
+    var disp = document.getElementById('timer-display');
+    var prog = document.getElementById('timer-progress');
+    var bar = document.getElementById('timer-bar');
+    if (remaining <= 0) {
+      timerDone();
+    } else {
+      clearInterval(restTimer);
+      if (disp) disp.textContent = fmtSecs(remaining);
+      if (prog) prog.style.width = (remaining / restTotalSec * 100) + '%';
+      restTimer = setInterval(function() {
+        var r = Math.max(0, Math.round((restEndTime - Date.now()) / 1000));
+        if (disp) disp.textContent = fmtSecs(r);
+        if (prog) prog.style.width = (r / restTotalSec * 100) + '%';
+        if (r <= 0) timerDone();
+      }, 500);
+    }
+  }
 });
 
 buildHome();
