@@ -305,6 +305,25 @@ text-transform:uppercase;
 .chart-bar.highlight { background:rgba(200,169,110,0.3); border-top-color:#e8c97e; }
 .bw-chart-bar { background:rgba(41,128,185,0.2); border-top-color:#2980b9; }
 
+/* RICH LIFT CHARTS */
+.lift-chart-wrap { margin:0 20px 12px; background:#171717; border:1px solid #2e2e2e; border-radius:10px; padding:16px; }
+.lift-chart-header { display:-webkit-flex; display:flex; -webkit-align-items:flex-start; align-items:flex-start; -webkit-justify-content:space-between; justify-content:space-between; margin-bottom:12px; }
+.lift-chart-title { font-size:13px; font-weight:700; color:#e8e2d8; }
+.lift-chart-sub { font-size:11px; color:#888; margin-top:2px; }
+.lift-chart-delta { text-align:right; }
+.lift-chart-delta-val { font-family:-apple-system,“SF Pro Display”,“Helvetica Neue”,Arial,sans-serif; font-size:18px; font-weight:800; }
+.lift-chart-delta-val.pos { color:#27ae60; }
+.lift-chart-delta-val.neg { color:#c0392b; }
+.lift-chart-delta-val.neu { color:#888; }
+.lift-chart-delta-label { font-size:10px; color:#555; margin-top:1px; }
+.lift-chart-svg { width:100%; overflow:visible; display:block; }
+.lift-chart-dates { display:-webkit-flex; display:flex; -webkit-justify-content:space-between; justify-content:space-between; margin-top:6px; padding:0 2px; }
+.lift-chart-date-label { font-size:9px; color:#555; letter-spacing:0.3px; }
+.lift-chart-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:12px; padding-top:12px; border-top:1px solid #252525; }
+.lcs-item { text-align:center; }
+.lcs-val { font-family:-apple-system,“SF Pro Display”,“Helvetica Neue”,Arial,sans-serif; font-size:15px; font-weight:700; color:#c8a96e; display:block; }
+.lcs-label { font-size:9px; letter-spacing:1px; text-transform:uppercase; color:#555; margin-top:2px; display:block; }
+
 /* BODY WEIGHT MODAL */
 .modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.75); z-index:600; display:none; -webkit-align-items:flex-end; align-items:flex-end; -webkit-justify-content:center; justify-content:center; }
 .modal-overlay.active { display:-webkit-flex; display:flex; }
@@ -878,6 +897,7 @@ function startWorkout(id) {
   for (var i = 0; i < all.length; i++) { if (all[i].id === id) { currentWorkout = all[i]; break; } }
   if (!currentWorkout) return;
   sessionData = {}; sessionNote = ''; workoutStartTime = Date.now(); previewMode = false;
+  requestNotifPermission();
   saveSession();
   document.getElementById('wo-title').textContent = currentWorkout.name;
   document.getElementById('wo-date').textContent = fmtDate(new Date());
@@ -1066,6 +1086,33 @@ function findEx(id) {
 }
 
 // == TIMER & BEEPS ==
+function requestNotifPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function sendRestNotification(sec) {
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'granted') return;
+  // Schedule notification to fire when rest ends
+  var delay = sec * 1000;
+  setTimeout(function() {
+    // Only fire if timer is still running (not skipped)
+    if (!restEndTime) return;
+    try {
+      var n = new Notification('Descanso concluído! 💪', {
+        body: 'Hora da próxima série.',
+        icon: '',
+        tag: 'rest-timer',
+        silent: false
+      });
+      setTimeout(function() { n.close(); }, 5000);
+    } catch(e) {}
+  }, delay);
+}
+
 function playBeeps() {
   try {
     var ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1099,6 +1146,7 @@ function startRestTimer(sec) {
   var disp = document.getElementById('timer-display');
   var prog = document.getElementById('timer-progress');
   bar.classList.add('active');
+  sendRestNotification(sec);
   function tick() {
     var r = Math.max(0, Math.round((restEndTime - Date.now()) / 1000));
     disp.textContent = fmtSecs(r);
@@ -1383,10 +1431,129 @@ function exportData() {
 }
 
 // == PROGRESS ==
+function buildLiftChart(body, exId, color) {
+  var history = getHistory();
+  var ex = findEx(exId); if (!ex) return;
+
+  // Collect data points — max load per session, with date
+  var pts = [];
+  for (var hi = 0; hi < history.length && pts.length < 16; hi++) {
+    var s = history[hi];
+    if (!s.sets || !s.sets[exId]) continue;
+    var sets = s.sets[exId]; var keys = Object.keys(sets);
+    var maxKg = 0; var maxReps = 1;
+    for (var k = 0; k < keys.length; k++) {
+      var sv = sets[keys[k]];
+      var kg = parseFloat(sv.kg) || 0;
+      if (kg > maxKg) { maxKg = kg; maxReps = parseInt(sv.reps) || 1; }
+    }
+    if (maxKg > 0) pts.push({ kg: maxKg, reps: maxReps, date: s.date, e1rm: estimate1RM(maxKg, maxReps) });
+  }
+  pts.reverse(); // oldest first
+  if (pts.length < 2) return;
+
+  // Stats
+  var first = pts[0]; var last = pts[pts.length - 1];
+  var diff = last.kg - first.kg;
+  var diffSign = diff > 0 ? '+' : '';
+  var diffCls = diff > 0 ? 'pos' : diff < 0 ? 'neg' : 'neu';
+  var prs = getPRs(); var pr = prs[exId];
+  var prVal = pr ? pr.kg : last.kg;
+  var best1RM = pr ? estimate1RM(pr.kg, pr.reps) : last.e1rm;
+  var sessions = pts.length;
+
+  // SVG dimensions
+  var W = 320; var H = 90; var PAD_L = 36; var PAD_R = 8; var PAD_T = 10; var PAD_B = 4;
+  var chartW = W - PAD_L - PAD_R;
+  var chartH = H - PAD_T - PAD_B;
+
+  // Scale
+  var allKg = []; var all1RM = [];
+  for (var i = 0; i < pts.length; i++) { allKg.push(pts[i].kg); all1RM.push(pts[i].e1rm); }
+  var minY = Math.min.apply(null, allKg); var maxY = Math.max.apply(null, all1RM);
+  var pad = (maxY - minY) * 0.15 || 5;
+  minY = Math.max(0, minY - pad); maxY = maxY + pad;
+  var rangeY = maxY - minY || 1;
+
+  function xOf(i) { return PAD_L + (i / (pts.length - 1)) * chartW; }
+  function yOf(v) { return PAD_T + chartH - ((v - minY) / rangeY) * chartH; }
+
+  // Build load line path
+  var loadPath = ''; var e1rmPath = '';
+  for (var i = 0; i < pts.length; i++) {
+    var px = xOf(i).toFixed(1); var py = yOf(pts[i].kg).toFixed(1);
+    var ey = yOf(pts[i].e1rm).toFixed(1);
+    loadPath += (i === 0 ? 'M' : 'L') + px + ',' + py + ' ';
+    e1rmPath += (i === 0 ? 'M' : 'L') + px + ',' + ey + ' ';
+  }
+
+  // Area fill under load line
+  var areaPath = loadPath + 'L' + xOf(pts.length - 1).toFixed(1) + ',' + (PAD_T + chartH) + ' L' + PAD_L + ',' + (PAD_T + chartH) + ' Z';
+
+  // Y axis labels (3 ticks)
+  var yTicks = '';
+  var tickVals = [minY + rangeY * 0.1, minY + rangeY * 0.5, minY + rangeY * 0.9];
+  for (var t = 0; t < tickVals.length; t++) {
+    var ty = yOf(tickVals[t]).toFixed(1);
+    yTicks += '<text x="' + (PAD_L - 4) + '" y="' + ty + '" text-anchor="end" dominant-baseline="middle" fill="#555" font-size="9" font-family="-apple-system,sans-serif">' + Math.round(tickVals[t]) + '<\/text>';
+    yTicks += '<line x1="' + PAD_L + '" y1="' + ty + '" x2="' + (W - PAD_R) + '" y2="' + ty + '" stroke="#252525" stroke-width="1" stroke-dasharray="3,3"\/>';
+  }
+
+  // Data point circles + tooltips
+  var dots = '';
+  for (var i = 0; i < pts.length; i++) {
+    var px = xOf(i).toFixed(1); var py = yOf(pts[i].kg).toFixed(1);
+    var isLast = (i === pts.length - 1);
+    dots += '<circle cx="' + px + '" cy="' + py + '" r="' + (isLast ? 4 : 3) + '" fill="' + (isLast ? color : '#0a0a0a') + '" stroke="' + color + '" stroke-width="' + (isLast ? 0 : 1.5) + '"\/>';
+  }
+
+  // Last point label
+  var lx = xOf(pts.length - 1); var ly = yOf(last.kg);
+  var labelX = lx > (W - 50) ? lx - 4 : lx + 4;
+  var labelAnchor = lx > (W - 50) ? 'end' : 'start';
+  var lastLabel = '<text x="' + labelX.toFixed(1) + '" y="' + (ly - 6).toFixed(1) + '" text-anchor="' + labelAnchor + '" fill="' + color + '" font-size="10" font-weight="700" font-family="-apple-system,sans-serif">' + last.kg + ' kg<\/text>';
+
+  var colorFade = color === '#c8a96e' ? 'rgba(200,169,110,0.15)' : 'rgba(41,128,185,0.15)';
+  var e1rmStroke = color === '#c8a96e' ? 'rgba(200,169,110,0.4)' : 'rgba(41,128,185,0.4)';
+
+  var svg = '<svg class="lift-chart-svg" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http:\/\/www.w3.org\/2000\/svg">'
+    + '<defs><linearGradient id="grad-' + exId + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="' + color + '" stop-opacity="0.3"\/><stop offset="100%" stop-color="' + color + '" stop-opacity="0"\/><\/linearGradient><\/defs>'
+    + yTicks
+    + '<path d="' + areaPath + '" fill="url(#grad-' + exId + ')" stroke="none"\/>'
+    + '<path d="' + e1rmPath + '" fill="none" stroke="' + e1rmStroke + '" stroke-width="1.5" stroke-dasharray="4,3"\/>'
+    + '<path d="' + loadPath + '" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"\/>'
+    + dots
+    + lastLabel
+    + '<\/svg>';
+
+  // Date labels (first and last)
+  var dateRow = '<div class="lift-chart-dates">'
+    + '<span class="lift-chart-date-label">' + fmtDate(pts[0].date) + '<\/span>'
+    + (pts.length > 2 ? '<span class="lift-chart-date-label">' + fmtDate(pts[Math.floor(pts.length / 2)].date) + '<\/span>' : '')
+    + '<span class="lift-chart-date-label">' + fmtDate(last.date) + '<\/span>'
+    + '<\/div>';
+
+  var statsRow = '<div class="lift-chart-stats">'
+    + '<div class="lcs-item"><span class="lcs-val">' + prVal + ' kg<\/span><span class="lcs-label">Carga PR<\/span><\/div>'
+    + '<div class="lcs-item"><span class="lcs-val">' + best1RM + ' kg<\/span><span class="lcs-label">1RM Est.<\/span><\/div>'
+    + '<div class="lcs-item"><span class="lcs-val">' + sessions + '<\/span><span class="lcs-label">Sessões<\/span><\/div>'
+    + '<\/div>';
+
+  var wrap = document.createElement('div'); wrap.className = 'lift-chart-wrap';
+  wrap.innerHTML = '<div class="lift-chart-header">'
+    + '<div><div class="lift-chart-title">' + ex.name + '<\/div><div class="lift-chart-sub">Carga máxima por sessão · linha tracejada = 1RM est.<\/div><\/div>'
+    + '<div class="lift-chart-delta"><div class="lift-chart-delta-val ' + diffCls + '">' + diffSign + diff.toFixed(1) + ' kg<\/div><div class="lift-chart-delta-label">vs. 1ª sessão<\/div><\/div>'
+    + '<\/div>'
+    + svg + dateRow + statsRow;
+  body.appendChild(wrap);
+}
+
 function buildProgress() {
   var prs = getPRs(); var body = document.getElementById('progress-body');
   if (!Object.keys(prs).length) { body.innerHTML = '<div class="history-empty"><div class="big">📈<\/div><div>Complete treinos para ver seus PRs!<\/div><\/div>'; return; }
   body.innerHTML = '';
+
+  // Body weight chart
   var bwLog = getBWLog();
   if (bwLog.length >= 2) {
     var bwLbl = document.createElement('div'); bwLbl.className = 'section-label'; bwLbl.textContent = 'Peso Corporal'; body.appendChild(bwLbl);
@@ -1407,6 +1574,15 @@ function buildProgress() {
       + '<div class="mini-chart">' + bars + '<\/div>';
     body.appendChild(bwChart);
   }
+
+  // Rich lift charts — all 4 base lifts
+  var chartLbl = document.createElement('div'); chartLbl.className = 'section-label'; chartLbl.textContent = 'Evolução de Carga — Levantamentos Base'; body.appendChild(chartLbl);
+  buildLiftChart(body, 'bench',    '#c8a96e');
+  buildLiftChart(body, 'squat',    '#c8a96e');
+  buildLiftChart(body, 'pullup',   '#c8a96e');
+  buildLiftChart(body, 'deadlift', '#c8a96e');
+
+  // PR cards
   var lbl = document.createElement('div'); lbl.className = 'section-label'; lbl.textContent = 'Recordes Pessoais · 1RM Estimado'; body.appendChild(lbl);
   var keyLifts = ['squat', 'deadlift', 'bench', 'rdl', 'hip-thrust', 'pullup'];
   var grid = document.createElement('div'); grid.className = 'progress-grid';
@@ -1422,34 +1598,8 @@ function buildProgress() {
     grid.appendChild(c);
   }
   body.appendChild(grid);
-  var history = getHistory();
-  var liftKeys = ['squat', 'deadlift', 'bench'];
-  for (var li = 0; li < liftKeys.length; li++) {
-    var lId = liftKeys[li]; var lEx = findEx(lId); if (!lEx) continue;
-    var lPts = [];
-    for (var hi = 0; hi < history.length && lPts.length < 8; hi++) {
-      if (!history[hi].sets || !history[hi].sets[lId]) continue;
-      var lSets = history[hi].sets[lId]; var lKeys = Object.keys(lSets); var lMaxKg = 0;
-      for (var lk = 0; lk < lKeys.length; lk++) { var lkg = parseFloat(lSets[lKeys[lk]].kg) || 0; if (lkg > lMaxKg) lMaxKg = lkg; }
-      if (lMaxKg > 0) lPts.push(lMaxKg);
-    }
-    lPts.reverse();
-    if (lPts.length < 2) continue;
-    var lMax = lPts[0]; var lMin = lPts[0];
-    for (var lpi = 1; lpi < lPts.length; lpi++) { if (lPts[lpi] > lMax) lMax = lPts[lpi]; if (lPts[lpi] < lMin) lMin = lPts[lpi]; }
-    var lRange = lMax - lMin || 1;
-    var lDiff = (lPts[lPts.length - 1] - lPts[0]).toFixed(1); var lSign = lDiff > 0 ? '+' : '';
-    var lBars = '';
-    for (var lbi = 0; lbi < lPts.length; lbi++) {
-      var lh = Math.max(8, ((lPts[lbi] - lMin) / lRange) * 100);
-      var lhl = (lbi === lPts.length - 1) ? ' highlight' : '';
-      lBars += '<div class="chart-bar' + lhl + '" style="height:' + lh + '%"><\/div>';
-    }
-    var lChart = document.createElement('div'); lChart.className = 'chart-container';
-    lChart.innerHTML = '<div class="chart-title-row"><div class="chart-title-main">' + lEx.name + ' — carga max.<\/div><div class="chart-title-delta">' + lSign + lDiff + ' kg<\/div><\/div>'
-      + '<div class="mini-chart">' + lBars + '<\/div>';
-    body.appendChild(lChart);
-  }
+
+  // All other exercises
   var lbl2 = document.createElement('div'); lbl2.className = 'section-label'; lbl2.textContent = 'Todos os Exercícios'; body.appendChild(lbl2);
   var grid2 = document.createElement('div'); grid2.className = 'progress-grid';
   var prKeys = Object.keys(prs);
