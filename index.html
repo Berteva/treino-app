@@ -231,6 +231,7 @@ text-transform:uppercase;
 .sug-chip.green { background:rgba(39,174,96,0.1); border-color:rgba(39,174,96,0.25); color:#27ae60; }
 .sug-chip.red { background:rgba(192,57,43,0.1); border-color:rgba(192,57,43,0.25); color:#c0392b; }
 .sug-chip.blue { background:rgba(41,128,185,0.1); border-color:rgba(41,128,185,0.25); color:#2980b9; }
+.sug-chip.grip { background:rgba(155,89,182,0.1); border-color:rgba(155,89,182,0.3); color:#9b59b6; }
 
 /* RPE INPUT */
 .sets-header-5col { display:grid; grid-template-columns:32px 1fr 1fr 52px 40px; gap:6px; padding:6px 0; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#555; border-bottom:1px solid #222; margin-bottom:6px; text-align:center; }
@@ -529,7 +530,7 @@ var PROGRAM = {
       { id:'hollow', name:'Hollow Body Hold', sets:4, reps:'20-30 seg', rest:45, note:'Lombar pressionada. Progredir pernas estendidas.', core:true },
       { id:'hip-thrust-bw', name:'Hip Thrust (Peso Corporal)', sets:3, reps:'15', rest:60, note:'Apertar glúteo no topo. Assoalho pélvico.', core:true },
     ]},
-    { id:'upper-b', name:'Upper B', day:'Quinta-feira', type:'upper', icon:'🔝', desc:'Costas · Bíceps · Manguito', exercises:[
+    { id:'upper-b', name:'Upper B', day:'Quinta-feira', type:'upper', icon:'🔝', desc:'Costas · Bíceps · Manguito · Grip', exercises:[
       { id:'pullup', name:'Barra Fixa / Lat Pulldown', sets:4, reps:'5-8', rest:180, note:'Deprima as escápulas antes de puxar.', tag:'Principal' },
       { id:'row-bar', name:'Remada com Barra', sets:4, reps:'6-8', rest:120, note:'Tronco 45°. Puxar para o umbigo.' },
       { id:'row-db', name:'Remada Unilateral com Halter', sets:3, reps:'10 cada', rest:75, note:'Cotovelo próximo ao tronco.' },
@@ -537,14 +538,18 @@ var PROGRAM = {
       { id:'face-pull', name:'Face Pull com Corda', sets:3, reps:'15', rest:60, note:'Puxar para a testa. Rotar externamente no final.' },
       { id:'side-plank', name:'Prancha Lateral com Elevação', sets:3, reps:'12 cada', rest:60, note:'Oblíquo e glúteo médio. Coluna neutra.', core:true },
       { id:'pallof', name:'Pall-Off Press', sets:3, reps:'10 cada', rest:60, note:'Anti-rotação pura. Pelve neutra.', core:true },
+      { id:'grip-hang', name:'Dead Hang na Barra', sets:3, reps:'20-40 seg', rest:60, note:'Suspensão passiva. Pegada pronada. Progredir o tempo a cada semana. Libera coluna e fortalece o grip.', grip:true },
+      { id:'grip-towel', name:'Remada com Toalha', sets:3, reps:'8-10', rest:60, note:'Enrole uma toalha na barra ou cabo. Puxa segurando as pontas. Ativa preensão de forma funcional.', grip:true },
     ]},
-    { id:'lower-b', name:'Lower B', day:'Sexta-feira', type:'lower', icon:'🏋', desc:'Posterior de coxa · Glúteo · Core', exercises:[
+    { id:'lower-b', name:'Lower B', day:'Sexta-feira', type:'lower', icon:'🏋', desc:'Posterior de coxa · Glúteo · Core · Grip', exercises:[
       { id:'deadlift', name:'Levantamento Terra', sets:4, reps:'4-5', rest:240, note:'Posição neutra de coluna é inegociável.', tag:'Principal' },
       { id:'rdl', name:'Romanian Deadlift (RDL)', sets:3, reps:'10', rest:90, note:'Empurrar quadril para trás. Alongar isquiotibial.' },
       { id:'hip-thrust', name:'Hip Thrust com Barra', sets:4, reps:'10-12', rest:90, note:'Calcanhares no chão. Apertar glúteo no topo.' },
       { id:'leg-curl', name:'Leg Curl Deitado', sets:3, reps:'12', rest:75, note:'Pelve pressionada. Controle excêntrico.' },
       { id:'ab-wheel', name:'Ab Wheel Rollout', sets:4, reps:'8-10', rest:75, note:'Iniciar de joelhos. Anti-extensão lombar.', core:true },
       { id:'copenhagen', name:'Copenhagen Plank', sets:3, reps:'20 seg cada', rest:60, note:'Perna superior no banco. Adutores + core.', core:true },
+      { id:'farmers-carry', name:'Farmers Carry (Caminhada com Carga)', sets:3, reps:'30-40m', rest:90, note:'Segure halteres pesados e caminhe ereto. Um dos melhores exercícios de grip e estabilidade global. Aumente o peso progressivamente.', grip:true },
+      { id:'plate-pinch', name:'Plate Pinch (Pinça com Anilha)', sets:3, reps:'20-30 seg', rest:60, note:'Segure uma anilha pelos lados com polegar e dedos. Sem apoio da palma. Isometria pura de preensão.', grip:true },
     ]},
   ],
   cardio: [
@@ -597,6 +602,10 @@ var YT = {
   'leg-curl':'leg curl deitado execução',
   'ab-wheel':'ab wheel rollout execução',
   'copenhagen':'copenhagen plank execução',
+  'grip-hang':'dead hang barra preensao grip',
+  'grip-towel':'remada toalha grip preensao execução',
+  'farmers-carry':'farmers carry caminhada carga grip execução',
+  'plate-pinch':'plate pinch anilha preensao grip execução',
   'breath':'respiracao diafragmatica tecnica',
   'spinal-rot':'rotacao coluna mobilidade',
   'hip-90':'90 90 mobilidade quadril',
@@ -934,10 +943,12 @@ function buildWorkoutScreen(preview) {
     + '<\/div><div class="warmup-body">' + wuItems + '<\/div>';
   body.appendChild(wuCard);
 
-  var main = []; var core = [];
+  var main = []; var core = []; var grip = [];
   for (var ei = 0; ei < currentWorkout.exercises.length; ei++) {
-    if (currentWorkout.exercises[ei].core) core.push(currentWorkout.exercises[ei]);
-    else main.push(currentWorkout.exercises[ei]);
+    var exItem = currentWorkout.exercises[ei];
+    if (exItem.grip) grip.push(exItem);
+    else if (exItem.core) core.push(exItem);
+    else main.push(exItem);
   }
   if (main.length) {
     var lbl = document.createElement('div'); lbl.className = 'ex-section-label';
@@ -950,6 +961,13 @@ function buildWorkoutScreen(preview) {
     corelbl.innerHTML = 'Core <span style="color:#c0392b;font-size:9px">●<\/span>';
     body.appendChild(corelbl);
     for (var ci = 0; ci < core.length; ci++) body.appendChild(mkExCard(core[ci], main.length + ci + 1, preview));
+  }
+  if (grip.length) {
+    var griplbl = document.createElement('div'); griplbl.className = 'ex-section-label';
+    griplbl.innerHTML = 'Grip <span style="color:#9b59b6;font-size:9px">●<\/span>';
+    body.appendChild(griplbl);
+    var gripOffset = main.length + core.length;
+    for (var gi = 0; gi < grip.length; gi++) body.appendChild(mkExCard(grip[gi], gripOffset + gi + 1, preview));
   }
   if (!preview) {
     var noteArea = document.createElement('div'); noteArea.className = 'note-area';
@@ -968,6 +986,7 @@ function mkExCard(ex, num, preview) {
   var card = document.createElement('div'); card.className = 'ex-card'; card.id = 'ex-card-' + ex.id;
   var tag = ex.tag ? '<span style="font-size:10px;color:#c8a96e;margin-left:6px">' + ex.tag + '<\/span>' : '';
   var coreTag = ex.core ? '<span style="font-size:10px;color:#c0392b;margin-left:6px">Core<\/span>' : '';
+  var gripTag = ex.grip ? '<span style="font-size:10px;color:#9b59b6;margin-left:6px">Grip<\/span>' : '';
   var week = getCurrentWeek(); var phase = getPhase(week);
   var isDeload = (week === 12);
   var adjReps = getWeekReps(week, ex.reps);
@@ -1013,7 +1032,7 @@ function mkExCard(ex, num, preview) {
   var adjPresc = adjSets + '× ' + adjReps + (ex.rest ? ' · ' + fmtSecs(ex.rest) + ' descanso' : '');
   card.innerHTML = '<div class="ex-card-header" onclick="toggleEx(\'' + ex.id + '\')">'
     + '<div class="ex-num">' + num + '<\/div>'
-    + '<div class="ex-name-wrap"><div class="ex-title">' + ex.name + tag + coreTag + '<\/div>'
+    + '<div class="ex-name-wrap"><div class="ex-title">' + ex.name + tag + coreTag + gripTag + '<\/div>'
     + '<div class="ex-prescription">' + adjPresc + '<\/div><\/div>'
     + '<div class="ex-status-icon" id="ex-status-' + ex.id + '">○<\/div>'
     + '<\/div>'
@@ -1086,6 +1105,16 @@ function findEx(id) {
 }
 
 // == TIMER & BEEPS ==
+// == SERVICE WORKER & NOTIFICATIONS ==
+var swReg = null;
+
+function initServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.register('/sw.js').then(function(reg) {
+    swReg = reg;
+  }).catch(function(e) {});
+}
+
 function requestNotifPermission() {
   if (!('Notification' in window)) return;
   if (Notification.permission === 'default') {
@@ -1096,21 +1125,20 @@ function requestNotifPermission() {
 function sendRestNotification(sec) {
   if (!('Notification' in window)) return;
   if (Notification.permission !== 'granted') return;
-  // Schedule notification to fire when rest ends
-  var delay = sec * 1000;
-  setTimeout(function() {
-    // Only fire if timer is still running (not skipped)
-    if (!restEndTime) return;
-    try {
-      var n = new Notification('Descanso concluído! 💪', {
-        body: 'Hora da próxima série.',
-        icon: '',
-        tag: 'rest-timer',
-        silent: false
-      });
-      setTimeout(function() { n.close(); }, 5000);
-    } catch(e) {}
-  }, delay);
+  // Send to Service Worker — runs even with screen locked
+  if (swReg && swReg.active) {
+    swReg.active.postMessage({
+      type: 'START_REST_TIMER',
+      sec: sec,
+      endTime: Date.now() + sec * 1000
+    });
+  }
+}
+
+function cancelRestNotification() {
+  if (swReg && swReg.active) {
+    swReg.active.postMessage({ type: 'CANCEL_REST_TIMER' });
+  }
 }
 
 function playBeeps() {
@@ -1158,6 +1186,7 @@ function startRestTimer(sec) {
 }
 function skipTimer() {
   clearInterval(restTimer); restTimer = null; restEndTime = null;
+  cancelRestNotification();
   document.getElementById('timer-bar').classList.remove('active');
 }
 
@@ -1720,6 +1749,7 @@ document.addEventListener('visibilitychange', function() {
   }
 });
 
+initServiceWorker();
 buildHome();
 </script>
 
