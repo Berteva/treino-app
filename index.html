@@ -411,6 +411,7 @@ text-transform:uppercase;
       <div class="topbar-sub" id="wo-date"></div>
     </div>
     <div id="wo-timer-mini" style="font-family:-apple-system,'SF Pro Display','Helvetica Neue',Arial,sans-serif;font-size:18px;font-weight:700;color:#555;"></div>
+    <button id="cancel-workout-btn" onclick="confirmCancelWorkout()" style="display:none;background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.4);color:#c0392b;border-radius:8px;font-size:12px;font-weight:700;padding:7px 12px;cursor:pointer;-webkit-appearance:none;margin-left:8px;flex-shrink:0;-webkit-flex-shrink:0">Cancelar</button>
   </div>
   <div class="screen-body" id="workout-body"></div>
   <div class="timer-bar" id="timer-bar">
@@ -920,6 +921,8 @@ function previewWorkout(id) {
   sessionData = {}; previewMode = true;
   document.getElementById('wo-title').textContent = currentWorkout.name;
   document.getElementById('wo-date').textContent = 'Visualização';
+  var cancelBtn = document.getElementById('cancel-workout-btn');
+  if (cancelBtn) cancelBtn.style.display = 'none';
   buildWorkoutScreen(true);
   navigate('home', 'workout');
 }
@@ -933,6 +936,8 @@ function startWorkout(id) {
   saveSession();
   document.getElementById('wo-title').textContent = currentWorkout.name;
   document.getElementById('wo-date').textContent = fmtDate(new Date());
+  var cancelBtn = document.getElementById('cancel-workout-btn');
+  if (cancelBtn) cancelBtn.style.display = 'block';
   buildWorkoutScreen(false);
   if (currentScreen !== 'workout') navigate('home', 'workout');
   clearInterval(sessionTimer);
@@ -1407,6 +1412,8 @@ function resumeWorkout() {
       }
     }
   }
+  var cancelBtn = document.getElementById('cancel-workout-btn');
+  if (cancelBtn) cancelBtn.style.display = 'block';
   navigate('home', 'workout');
   clearInterval(sessionTimer);
   sessionTimer = setInterval(function() {
@@ -1834,7 +1841,25 @@ function navigate(from, to) {
   setTimeout(function() { f.classList.remove('slide-out'); }, 300);
   t.classList.add('active'); currentScreen = to;
 }
-function goHome() { clearInterval(sessionTimer); skipTimer(); navigate('workout', 'home'); buildHome(); }
+function confirmCancelWorkout() {
+  if (confirm('Cancelar treino? Todo o progresso desta sessão será perdido.')) {
+    clearInterval(sessionTimer); clearInterval(restTimer);
+    document.getElementById('timer-bar').classList.remove('active');
+    var cancelBtn = document.getElementById('cancel-workout-btn');
+    if (cancelBtn) cancelBtn.style.display = 'none';
+    clearSession();
+    navigate('workout', 'home');
+    buildHome();
+    showToast('Treino cancelado');
+  }
+}
+
+function goHome() {
+  clearInterval(sessionTimer); skipTimer();
+  var cancelBtn = document.getElementById('cancel-workout-btn');
+  if (cancelBtn) cancelBtn.style.display = 'none';
+  navigate('workout', 'home'); buildHome();
+}
 function showTab(tab) {
   var tabs = ['home', 'plan', 'history', 'progress'];
   for (var i = 0; i < tabs.length; i++) { document.getElementById('screen-' + tabs[i]).classList.remove('active', 'slide-out'); }
