@@ -480,6 +480,29 @@ text-transform:uppercase;
   </div>
 </div>
 
+<!-- MANUAL WORKOUT ENTRY MODAL -->
+
+<div id="manual-modal" class="modal-overlay" style="-webkit-align-items:flex-start;align-items:flex-start;overflow-y:auto">
+  <div class="modal-sheet" style="border-radius:0;min-height:100vh;padding-top:env(safe-area-inset-top,20px)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div class="modal-title" style="margin-bottom:0">Registrar Treino Passado</div>
+      <button onclick="closeManualModal()" style="background:none;border:none;color:#555;font-size:24px;cursor:pointer;padding:4px">✕</button>
+    </div>
+    <div class="note-area-label">Tipo de treino</div>
+    <select id="manual-workout-select" class="session-note-input" style="min-height:0;padding:10px 14px;font-size:14px;background:#222;border:1px solid #333;border-radius:8px;color:#e8e2d8;-webkit-appearance:none;appearance:none;width:100%"></select>
+    <div class="note-area-label" style="margin-top:12px">📅 Data</div>
+    <input type="date" id="manual-date" class="session-note-input" style="min-height:0;padding:10px 14px;font-size:15px;color:#e8e2d8;background:#222;border:1px solid #333;border-radius:8px;width:100%">
+    <div class="note-area-label" style="margin-top:8px">⏱ Duração (minutos)</div>
+    <input type="number" inputmode="numeric" id="manual-dur" class="session-note-input" style="min-height:0;padding:10px 14px;font-size:15px" placeholder="Ex: 70">
+    <div class="note-area-label" style="margin-top:8px">📝 Nota (opcional)</div>
+    <textarea id="manual-note" class="session-note-input" placeholder="Como foi o treino?"></textarea>
+    <div class="note-area-label" style="margin-top:12px">Cargas registradas (opcional)</div>
+    <div id="manual-sets-area" style="margin-bottom:8px"></div>
+    <button class="modal-confirm-btn" style="margin-top:8px" onclick="saveManualWorkout()">Salvar Treino</button>
+    <button class="modal-cancel-btn" onclick="closeManualModal()">Cancelar</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -971,7 +994,12 @@ function buildWorkoutScreen(preview) {
   }
   if (!preview) {
     var noteArea = document.createElement('div'); noteArea.className = 'note-area';
-    noteArea.innerHTML = '<div class="note-area-label">📝 Nota da sessão (opcional)<\/div>'
+    var todayStr = new Date().toISOString().split('T')[0];
+    noteArea.innerHTML = '<div class="note-area-label">📅 Data do treino<\/div>'
+      + '<input type="date" id="session-date-input" class="session-note-input" style="min-height:0;padding:10px 14px;font-size:15px;color:#e8e2d8;background:#222;border:1px solid #333;border-radius:8px;width:100%" value="' + todayStr + '" max="' + todayStr + '">'
+      + '<div class="note-area-label" style="margin-top:4px">⏱ Duração em minutos (vazio = automático)<\/div>'
+      + '<input type="number" inputmode="numeric" id="session-dur-input" class="session-note-input" style="min-height:0;padding:10px 14px;font-size:15px" placeholder="Ex: 75">'
+      + '<div class="note-area-label" style="margin-top:4px">📝 Nota da sessão (opcional)<\/div>'
       + '<textarea class="session-note-input" placeholder="Como foi? Dor, energia, condições..." id="session-note-input"><\/textarea>';
     body.appendChild(noteArea);
   }
@@ -1196,7 +1224,13 @@ function finishWorkout() {
   document.getElementById('timer-bar').classList.remove('active');
   var noteEl = document.getElementById('session-note-input');
   if (noteEl) sessionNote = noteEl.value;
-  var dur = Math.floor((Date.now() - workoutStartTime) / 60000);
+  // Date: use custom date if set, otherwise today
+  var dateEl = document.getElementById('session-date-input');
+  var sessionDate = (dateEl && dateEl.value) ? new Date(dateEl.value + 'T12:00:00').toISOString() : new Date().toISOString();
+  // Duration: use manual input if provided, otherwise calculate from timer
+  var durEl = document.getElementById('session-dur-input');
+  var manualDur = durEl ? parseInt(durEl.value) : NaN;
+  var dur = (!isNaN(manualDur) && manualDur > 0) ? manualDur : Math.floor((Date.now() - workoutStartTime) / 60000);
   var h = getHistory();
   var completedEx = 0; var totalEx = currentWorkout.exercises.length;
   var exIds = Object.keys(sessionData);
@@ -1208,11 +1242,14 @@ function finishWorkout() {
   }
   var entry = {
     id: Date.now(), workoutId: currentWorkout.id, workoutName: currentWorkout.name,
-    date: new Date().toISOString(), duration: dur,
+    date: sessionDate, duration: dur,
     sets: JSON.parse(JSON.stringify(sessionData)),
     note: sessionNote, completedEx: completedEx, totalEx: totalEx
   };
-  h.unshift(entry); saveHistory(h);
+  h.unshift(entry);
+  // Keep history sorted by date descending
+  h.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+  saveHistory(h);
   var newPRs = updatePRs(entry);
   clearSession();
   showSummary(entry, newPRs, h);
@@ -1409,6 +1446,9 @@ function buildHistory() {
   var lbl = document.createElement('div'); lbl.className = 'section-label';
   lbl.textContent = h.length + ' treino' + (h.length !== 1 ? 's' : '') + ' registrado' + (h.length !== 1 ? 's' : '');
   body.appendChild(lbl);
+  var manualBtn = document.createElement('button'); manualBtn.className = 'export-btn';
+  manualBtn.style.cssText = 'color:#c8a96e;border-color:rgba(200,169,110,0.3);background:rgba(200,169,110,0.06);margin-bottom:6px';
+  manualBtn.innerHTML = '✏️ Registrar treino passado'; manualBtn.onclick = openManualModal; body.appendChild(manualBtn);
   var expBtn = document.createElement('button'); expBtn.className = 'export-btn';
   expBtn.innerHTML = '📤 Exportar histórico (JSON)'; expBtn.onclick = exportData; body.appendChild(expBtn);
   for (var si = 0; si < h.length; si++) {
@@ -1443,6 +1483,102 @@ function buildHistory() {
       + (entry.note ? '<div class="session-sets-preview" style="font-style:italic;color:#666">💬 ' + entry.note + '<\/div>' : '');
     body.appendChild(card);
   }
+}
+
+function openManualModal() {
+  var sel = document.getElementById('manual-workout-select');
+  sel.innerHTML = '';
+  var all = PROGRAM.strength.concat(PROGRAM.cardio);
+  for (var i = 0; i < all.length; i++) {
+    sel.innerHTML += '<option value="' + all[i].id + '">' + all[i].name + ' — ' + all[i].day + '<\/option>';
+  }
+  // Default date to yesterday
+  var yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+  var maxDate = new Date().toISOString().split('T')[0];
+  var defDate = yesterday.toISOString().split('T')[0];
+  document.getElementById('manual-date').value = defDate;
+  document.getElementById('manual-date').max = maxDate;
+  document.getElementById('manual-dur').value = '';
+  document.getElementById('manual-note').value = '';
+  buildManualSetsArea(all[0]);
+  sel.onchange = function() {
+    for (var j = 0; j < all.length; j++) { if (all[j].id === sel.value) { buildManualSetsArea(all[j]); break; } }
+  };
+  document.getElementById('manual-modal').classList.add('active');
+}
+
+function buildManualSetsArea(workout) {
+  var area = document.getElementById('manual-sets-area');
+  area.innerHTML = '';
+  var exs = workout ? workout.exercises : [];
+  for (var i = 0; i < exs.length; i++) {
+    var ex = exs[i];
+    var row = document.createElement('div');
+    row.style.cssText = 'margin-bottom:10px;background:#111;border-radius:8px;padding:10px 12px';
+    row.innerHTML = '<div style="font-size:12px;font-weight:700;color:#e8e2d8;margin-bottom:6px">' + ex.name + ' <span style="color:#555;font-weight:400">(' + ex.sets + '× ' + ex.reps + ')<\/span><\/div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'
+      + '<input type="number" inputmode="decimal" class="set-input" placeholder="Carga kg" id="manual-kg-' + ex.id + '" style="font-size:13px;padding:7px 8px">'
+      + '<input type="text" inputmode="numeric" class="set-input" placeholder="Reps" id="manual-reps-' + ex.id + '" style="font-size:13px;padding:7px 8px">'
+      + '<\/div>';
+    area.appendChild(row);
+  }
+}
+
+function closeManualModal() {
+  document.getElementById('manual-modal').classList.remove('active');
+}
+
+function saveManualWorkout() {
+  var sel = document.getElementById('manual-workout-select');
+  var dateVal = document.getElementById('manual-date').value;
+  var durVal = parseInt(document.getElementById('manual-dur').value);
+  var noteVal = document.getElementById('manual-note').value;
+
+  if (!sel.value || !dateVal) { showToast('Preencha treino e data'); return; }
+
+  var all = PROGRAM.strength.concat(PROGRAM.cardio);
+  var workout = null;
+  for (var i = 0; i < all.length; i++) { if (all[i].id === sel.value) { workout = all[i]; break; } }
+  if (!workout) return;
+
+  // Build sets from manual inputs
+  var sets = {};
+  var completedEx = 0;
+  for (var j = 0; j < workout.exercises.length; j++) {
+    var ex = workout.exercises[j];
+    var kgEl = document.getElementById('manual-kg-' + ex.id);
+    var rpsEl = document.getElementById('manual-reps-' + ex.id);
+    var kg = kgEl ? kgEl.value : '';
+    var rps = rpsEl ? rpsEl.value : '';
+    if (kg || rps) {
+      sets[ex.id] = {};
+      for (var s = 0; s < ex.sets; s++) {
+        sets[ex.id][s] = { kg: kg, reps: rps, done: true };
+      }
+      completedEx++;
+    }
+  }
+
+  var entry = {
+    id: Date.now(),
+    workoutId: workout.id,
+    workoutName: workout.name,
+    date: new Date(dateVal + 'T12:00:00').toISOString(),
+    duration: (!isNaN(durVal) && durVal > 0) ? durVal : 60,
+    sets: sets,
+    note: noteVal,
+    completedEx: completedEx,
+    totalEx: workout.exercises.length
+  };
+
+  var h = getHistory();
+  h.unshift(entry);
+  h.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+  saveHistory(h);
+  updatePRs(entry);
+  closeManualModal();
+  buildHistory();
+  showToast('Treino registrado! ✅');
 }
 
 function exportData() {
