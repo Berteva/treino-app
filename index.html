@@ -1539,27 +1539,50 @@ function findEx(id) {
 // == SERVICE WORKER & NOTIFICATIONS ==
 var swReg = null;
 
+function getSwPath() {
+  // Detect correct SW path for GitHub Pages subpath or root
+  var loc = window.location.pathname;
+  var base = loc.replace(/\/[^\/]*$/, '') || '';
+  return base + '/sw.js';
+}
+
 function initServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
-  navigator.serviceWorker.register('/sw.js').then(function(reg) {
+  var swPath = getSwPath();
+  navigator.serviceWorker.register(swPath).then(function(reg) {
     swReg = reg;
-  }).catch(function(e) {});
+    // If SW is installing, wait for it to become active
+    if (reg.installing) {
+      reg.installing.addEventListener('statechange', function() {
+        if (this.state === 'activated') swReg = reg;
+      });
+    }
+  }).catch(function(e) {
+    console.log('SW registration failed:', e);
+  });
   patchTimerDone();
+}
+
+function getActiveSW() {
+  if (!swReg) return null;
+  return swReg.active || swReg.installing || swReg.waiting || null;
 }
 
 function requestNotifPermission() {
   if (!('Notification' in window)) return;
   if (Notification.permission === 'default') {
-    Notification.requestPermission();
+    Notification.requestPermission().then(function(perm) {
+      if (perm === 'granted') showToast('Notificações ativadas! 🔔');
+    });
   }
 }
 
 function sendRestNotification(sec) {
   if (!('Notification' in window)) return;
   if (Notification.permission !== 'granted') return;
-  // Send to Service Worker — runs even with screen locked
-  if (swReg && swReg.active) {
-    swReg.active.postMessage({
+  var sw = getActiveSW();
+  if (sw) {
+    sw.postMessage({
       type: 'START_REST_TIMER',
       sec: sec,
       endTime: Date.now() + sec * 1000
@@ -1568,8 +1591,9 @@ function sendRestNotification(sec) {
 }
 
 function cancelRestNotification() {
-  if (swReg && swReg.active) {
-    swReg.active.postMessage({ type: 'CANCEL_REST_TIMER' });
+  var sw = getActiveSW();
+  if (sw) {
+    sw.postMessage({ type: 'CANCEL_REST_TIMER' });
   }
 }
 
@@ -2199,6 +2223,22 @@ function buildProgress() {
 }
 
 // == PLAN ==
+function showNotifDiagnostics() {
+  var lines = [];
+  lines.push('SW suportado: ' + ('serviceWorker' in navigator ? 'SIM' : 'NAO'));
+  lines.push('SW registrado: ' + (swReg ? 'SIM' : 'NAO'));
+  if (swReg) {
+    lines.push('SW active: ' + (swReg.active ? 'SIM' : 'NAO'));
+    lines.push('SW installing: ' + (swReg.installing ? 'SIM' : 'NAO'));
+    lines.push('SW waiting: ' + (swReg.waiting ? 'SIM' : 'NAO'));
+    lines.push('SW scope: ' + swReg.scope);
+  }
+  lines.push('Notification API: ' + ('Notification' in window ? 'SIM' : 'NAO'));
+  if ('Notification' in window) lines.push('Permissao: ' + Notification.permission);
+  lines.push('Path SW: ' + getSwPath());
+  alert('== Diagnóstico Notificações ==\n\n' + lines.join('\n'));
+}
+
 function buildPlan() {
   var body = document.getElementById('plan-body'); body.innerHTML = '';
   var hero = document.createElement('div'); hero.className = 'plan-hero';
@@ -2220,6 +2260,13 @@ function buildPlan() {
   body.appendChild(weekGrid);
   var wnote = document.createElement('div'); wnote.style.cssText = 'margin:4px 20px 12px;font-size:11px;color:#555;line-height:1.5;';
   wnote.textContent = 'HIIT e Zone 2 são opcionais. HIIT somente a partir da semana 5.'; body.appendChild(wnote);
+  var diagBtn = document.createElement('button');
+  diagBtn.className = 'export-btn';
+  diagBtn.style.cssText = 'margin-bottom:4px;color:#7a6eaa;border-color:rgba(122,110,170,0.3)';
+  diagBtn.innerHTML = '🔔 Diagnóstico de Notificações';
+  diagBtn.onclick = showNotifDiagnostics;
+  body.appendChild(diagBtn);
+
   mkInfoCard(body,'📅','Fases de Progressão',[{dot:'',html:'<div class="phase-row"><div class="phase-label">Semanas 1-4 · Adaptação<\/div><div class="phase-desc">Cargas a 60-70% do 1RM estimado. Foco absoluto em técnica.<\/div><\/div><div class="phase-row"><div class="phase-label">Semanas 5-8 · Progressão<\/div><div class="phase-desc">+2,5 kg/semana nos principais quando todas as séries completadas.<\/div><\/div><div class="phase-row"><div class="phase-label">Semanas 9-11 · Intensificação<\/div><div class="phase-desc">Intensidade acima de 85% do 1RM. Foco em força máxima.<\/div><\/div><div class="phase-row"><div class="phase-label">Semana 12 · Deload obrigatório<\/div><div class="phase-desc">Volume -40%, intensidade -20%. Recuperação ativa. Prepara para o próximo ciclo.<\/div><\/div>'}],true);
   mkInfoCard(body,'⚙️','Premissas do Treino',[{dot:'',html:'<div class="info-row"><div class="info-dot"><\/div><div class="info-text"><strong>Técnica antes do peso.<\/strong> Nunca sacrificar execução por carga.<\/div><\/div><div class="info-row"><div class="info-dot"><\/div><div class="info-text"><strong>Progressão dupla:<\/strong> primeiro aumente reps até o teto, depois aumente carga e volte ao piso.<\/div><\/div><div class="info-row"><div class="info-dot"><\/div><div class="info-text"><strong>RPE como guia:<\/strong> séries principais devem terminar em RPE 7-8. Se chegar a 9-10, reduza a carga.<\/div><\/div><div class="info-row"><div class="info-dot"><\/div><div class="info-text"><strong>Zone 2:<\/strong> FC 108-126 bpm. Falar frases completas sem pausar.<\/div><\/div><div class="info-row"><div class="info-dot"><\/div><div class="info-text"><strong>Aquecimento incluso<\/strong> no topo de cada sessão. Nunca pule.<\/div><\/div>'}]);
   mkInfoCard(body,'🥩','Nutrição · Dieta Carnívora',[{dot:'',html:'<div class="info-row"><div class="info-dot green"><\/div><div class="info-text"><strong>Proteína:<\/strong> 1,8-2,2 g/kg/dia. Carnes vermelhas, ovos, peixes gordurosos.<\/div><\/div><div class="info-row"><div class="info-dot green"><\/div><div class="info-text"><strong>Gordura animal:<\/strong> manter alta — matéria-prima para testosterona. Não restringir.<\/div><\/div><div class="info-row"><div class="info-dot green"><\/div><div class="info-text"><strong>Timing:<\/strong> refeição 1,5-2h antes. Proteína dentro de 1h após o treino.<\/div><\/div><div class="info-row"><div class="info-dot blue"><\/div><div class="info-text"><strong>Hidratação:<\/strong> 35-40 ml/kg/dia. Eletrólitos críticos na dieta carnívora.<\/div><\/div>'}]);
