@@ -1,5 +1,5 @@
 // Service Worker — Rest Timer Notifications
-// Arquivo: sw.js (raiz do repositório GitHub)
+// v2 — compatible with GitHub Pages subpath
 
 self.addEventListener(‘install’, function(e) {
 self.skipWaiting();
@@ -9,21 +9,19 @@ self.addEventListener(‘activate’, function(e) {
 e.waitUntil(self.clients.claim());
 });
 
-// Receive message from main app with rest duration
+var pendingTimer = null;
+
 self.addEventListener(‘message’, function(e) {
-if (!e.data || e.data.type !== ‘START_REST_TIMER’) return;
+if (!e.data) return;
 
-var sec = e.data.sec;
-var endTime = e.data.endTime;
-
-// Wait until rest period ends, then notify
-var delay = Math.max(0, endTime - Date.now());
-
-setTimeout(function() {
-self.registration.showNotification(‘Descanso concluído! 💪’, {
-body: ‘Hora da próxima série.’,
-icon: ‘/icon-192.png’,
-badge: ‘/icon-192.png’,
+if (e.data.type === ‘START_REST_TIMER’) {
+// Clear any existing pending timer
+if (pendingTimer) { clearTimeout(pendingTimer); pendingTimer = null; }
+var delay = Math.max(0, e.data.endTime - Date.now());
+pendingTimer = setTimeout(function() {
+pendingTimer = null;
+self.registration.showNotification(‘Descanse concluido! Próxima série 💪’, {
+body: ‘Toque para voltar ao treino.’,
 tag: ‘rest-timer’,
 renotify: true,
 requireInteraction: false,
@@ -31,25 +29,22 @@ silent: false,
 vibrate: [200, 100, 200]
 });
 }, delay);
-});
+}
 
-// Cancel notification if user skipped timer
-self.addEventListener(‘message’, function(e) {
-if (!e.data || e.data.type !== ‘CANCEL_REST_TIMER’) return;
+if (e.data.type === ‘CANCEL_REST_TIMER’) {
+if (pendingTimer) { clearTimeout(pendingTimer); pendingTimer = null; }
 self.registration.getNotifications({ tag: ‘rest-timer’ }).then(function(notifs) {
-notifs.forEach(function(n) { n.close(); });
+for (var i = 0; i < notifs.length; i++) notifs[i].close();
 });
+}
 });
 
-// Open app when notification is tapped
 self.addEventListener(‘notificationclick’, function(e) {
 e.notification.close();
 e.waitUntil(
 self.clients.matchAll({ type: ‘window’, includeUncontrolled: true }).then(function(clients) {
-if (clients.length > 0) {
-return clients[0].focus();
-}
-return self.clients.openWindow(’/’);
+if (clients.length > 0) return clients[0].focus();
+return self.clients.openWindow(self.registration.scope);
 })
 );
 });
