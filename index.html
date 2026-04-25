@@ -445,6 +445,34 @@ text-transform:uppercase;
 .guided-next-btn { width:100%; padding:18px; border:none; border-radius:12px; background:#c8a96e; color:#0a0a0a; font-family:-apple-system,“SF Pro Display”,“Helvetica Neue”,Arial,sans-serif; font-size:17px; font-weight:900; letter-spacing:1px; text-transform:uppercase; cursor:pointer; -webkit-appearance:none; appearance:none; }
 .guided-next-btn:active { opacity:.85; }
 .guided-next-btn.finish { background:#27ae60; color:#fff; }
+
+/* MODE SELECTOR */
+.mode-selector { display:-webkit-flex; display:flex; background:#111; border-radius:10px; padding:3px; margin:8px 20px 4px; border:1px solid #252525; }
+.mode-btn { -webkit-flex:1; flex:1; padding:9px 8px; border:none; border-radius:8px; font-family:-apple-system,“SF Pro Text”,“Helvetica Neue”,Arial,sans-serif; font-size:12px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; background:none; color:#555; -webkit-transition:all .2s; transition:all .2s; }
+.mode-btn.active { background:#1e1e1e; color:#e8e2d8; }
+.mode-btn.gym.active { color:#c8a96e; }
+.mode-btn.hotel.active { color:#2980b9; }
+.mode-btn.run.active { color:#27ae60; }
+
+/* HOTEL BADGE on day cards */
+.hotel-badge { background:rgba(41,128,185,0.15); color:#2980b9; font-size:9px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; padding:2px 6px; border-radius:4px; margin-left:6px; }
+
+/* RUNNING SECTION */
+.run-week-card { margin:0 20px 10px; background:#171717; border:1px solid rgba(39,174,96,0.3); border-radius:10px; overflow:hidden; }
+.run-week-header { background:rgba(39,174,96,0.08); padding:14px 16px; border-bottom:1px solid rgba(39,174,96,0.15); }
+.run-week-label { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#27ae60; font-weight:800; margin-bottom:3px; }
+.run-week-title { font-family:-apple-system,“SF Pro Display”,“Helvetica Neue”,Arial,sans-serif; font-size:17px; font-weight:700; color:#e8e2d8; }
+.run-week-days { font-size:12px; color:#888; margin-top:2px; }
+.run-session-row { padding:14px 16px; border-bottom:1px solid #1e1e1e; cursor:pointer; }
+.run-session-row:last-child { border-bottom:none; }
+.run-session-row:active { background:#111; }
+.run-session-name { font-size:13px; font-weight:700; color:#e8e2d8; margin-bottom:2px; }
+.run-session-desc { font-size:12px; color:#888; }
+.run-race-banner { margin:0 20px 10px; background:rgba(200,169,110,0.1); border:1px solid rgba(200,169,110,0.3); border-radius:10px; padding:14px 16px; display:-webkit-flex; display:flex; -webkit-align-items:center; align-items:center; gap:12px; }
+.run-race-icon { font-size:28px; -webkit-flex-shrink:0; flex-shrink:0; }
+.run-race-info { -webkit-flex:1; flex:1; }
+.run-race-title { font-size:14px; font-weight:700; color:#c8a96e; margin-bottom:2px; }
+.run-race-sub { font-size:12px; color:#888; }
 </style>
 
 </head>
@@ -466,10 +494,20 @@ text-transform:uppercase;
     <div id="absence-banner-wrap"></div>
     <div id="hero-card-wrap"></div>
     <div id="stag-alerts-wrap"></div>
-    <div class="section-label" id="strength-label">Treinos de Força</div>
-    <div class="day-cards" id="strength-cards"></div>
-    <div class="section-label" style="margin-top:4px;">Cardio &amp; Recuperação</div>
-    <div class="day-cards" id="cardio-cards"></div>
+    <div class="mode-selector">
+      <button class="mode-btn gym active" id="mode-gym" onclick="setMode('gym')">🏋 Academia</button>
+      <button class="mode-btn hotel" id="mode-hotel" onclick="setMode('hotel')">🏨 Hotel</button>
+      <button class="mode-btn run" id="mode-run" onclick="setMode('run')">🏃 Corrida 5k</button>
+    </div>
+    <div id="strength-section">
+      <div class="section-label" id="strength-label">Treinos de Força</div>
+      <div class="day-cards" id="strength-cards"></div>
+      <div class="section-label" style="margin-top:4px;">Cardio &amp; Recuperação</div>
+      <div class="day-cards" id="cardio-cards"></div>
+    </div>
+    <div id="running-section" style="display:none">
+      <div id="run-content"></div>
+    </div>
   </div>
   <div class="bottom-nav">
     <button class="nav-btn active" onclick="showTab('home')"><span class="nav-icon">🏠</span><span class="nav-label">Início</span></button>
@@ -709,6 +747,103 @@ var PROGRAM = {
   ]
 };
 
+// ── HOTEL PROGRAMS ──────────────────────────────────────────────────────────
+var HOTEL = {
+  strength: [
+    { id:'hotel-upper-a', name:'Upper A — Hotel', day:'Segunda-feira', type:'upper', icon:'💪', desc:'Peito · Ombros · Tríceps · Core', hotel:true, gymId:'upper-a', exercises:[
+      { id:'pushup', name:'Flexão de Braço', sets:4, reps:'8-15', rest:90, note:'Eleve os pés na cama para focar em peito superior. Progrida elevando progressivamente.', tag:'Principal' },
+      { id:'pike-pushup', name:'Pike Push-Up', sets:3, reps:'8-12', rest:75, note:'Quadril elevado, cabeça aponta para o chão. Simula desenvolvimento de ombros.' },
+      { id:'diamond-pushup', name:'Flexão Diamante', sets:3, reps:'10-15', rest:60, note:'Mãos em triângulo sob o peito. Foco total em tríceps.' },
+      { id:'archer-pushup', name:'Flexão Archer', sets:3, reps:'6-8 cada', rest:90, note:'Braço de apoio estendido ao lado. Alta demanda unilateral de peito.' },
+      { id:'plank-reach', name:'Prancha com Alcance Alternado', sets:3, reps:'10 cada', rest:60, note:'Anti-rotação. Quadril estabilizado.', core:true },
+      { id:'dead-bug', name:'Dead Bug', sets:3, reps:'8 cada', rest:60, note:'Lombar colada no chão. Respiração controlada.', core:true },
+    ]},
+    { id:'hotel-lower-a', name:'Lower A — Hotel', day:'Terça-feira', type:'lower', icon:'🦵', desc:'Quadríceps · Glúteo · Core', hotel:true, gymId:'lower-a', exercises:[
+      { id:'bulgarian-bw', name:'Agachamento Búlgaro (pé na cama)', sets:4, reps:'10-15 cada', rest:90, note:'Pé traseiro na cama. Segure mochila para progredir. Principal substituto do agachamento.', tag:'Principal' },
+      { id:'pistol-assisted', name:'Pistol Squat Assistido', sets:3, reps:'6-10 cada', rest:90, note:'Segure a maçaneta da porta. Reduza a assistência progressivamente.' },
+      { id:'sumo-pause', name:'Agachamento Sumô com Pausa', sets:3, reps:'15-20', rest:60, note:'Pausa de 3 seg na posição baixa. Tempo sob tensão compensa ausência de carga.' },
+      { id:'calf-unipodal', name:'Panturrilha Unipodal na Parede', sets:4, reps:'15-20 cada', rest:60, note:'Apoie-se levemente na parede. ROM completo.' },
+      { id:'hollow', name:'Hollow Body Hold', sets:4, reps:'20-40 seg', rest:45, note:'Lombar pressionada. Progredir pernas estendidas.', core:true },
+      { id:'hip-thrust-bed', name:'Hip Thrust com Pés na Cama', sets:3, reps:'15-20', rest:60, note:'Ombros no chão, pés na cama. Pausa de 2 seg no topo. Maior amplitude que no chão.', core:true },
+    ]},
+    { id:'hotel-upper-b', name:'Upper B — Hotel', day:'Quinta-feira', type:'upper', icon:'🔝', desc:'Costas · Bíceps · Manguito · Grip', hotel:true, gymId:'upper-b', exercises:[
+      { id:'inverted-row', name:'Remada Invertida na Mesa', sets:4, reps:'8-15', rest:90, note:'Deite sob a mesa, segure a borda. Eleve os pés para aumentar dificuldade. Principal substituto da barra fixa.', tag:'Principal' },
+      { id:'face-pull-towel', name:'Face Pull com Toalha na Porta', sets:3, reps:'15', rest:60, note:'Dobre a toalha numa porta semifechada. Puxe para a testa externamente rotando.' },
+      { id:'curl-towel', name:'Rosca Isométrica com Toalha', sets:3, reps:'30-40 seg', rest:60, note:'Pise na toalha e puxe com os braços a 90°. Contração máxima dos bíceps.' },
+      { id:'wide-pushup', name:'Flexão Aberta (Wide Push-Up)', sets:3, reps:'10-15', rest:60, note:'Mãos afastadas e dedos apontados para fora. Ativa serrátil e dorsal.' },
+      { id:'door-hang', name:'Dead Hang no Batente da Porta', sets:3, reps:'20-40 seg', rest:60, note:'Segure o batente da porta. Grip + descompressão da coluna.', grip:true },
+      { id:'side-plank', name:'Prancha Lateral com Elevação', sets:3, reps:'12 cada', rest:60, note:'Oblíquo e glúteo médio. Coluna neutra.', core:true },
+      { id:'pallof-towel', name:'Pall-Off Press com Toalha na Porta', sets:3, reps:'10 cada', rest:60, note:'Anti-rotação funcional. Toalha na maçaneta da porta.', core:true },
+    ]},
+    { id:'hotel-lower-b', name:'Lower B — Hotel', day:'Sexta-feira', type:'lower', icon:'🏋', desc:'Posterior · Glúteo · Core · Grip', hotel:true, gymId:'lower-b', exercises:[
+      { id:'rdl-unipodal', name:'RDL Unipodal com Mochila', sets:4, reps:'8-10 cada', rest:90, note:'Segure mochila com livros. Empurre quadril para trás. Controle excêntrico de 3 seg.', tag:'Principal' },
+      { id:'hip-thrust-bed2', name:'Hip Thrust com Pés na Cama', sets:4, reps:'15-20', rest:90, note:'Pausa de 2 seg no topo. Apertar glúteo ao máximo. Adicione mochila no quadril para progredir.' },
+      { id:'nordic-curl', name:'Nordic Curl Assistido', sets:3, reps:'4-8', rest:90, note:'Pés sob a cama. Desça controlado segurando o chão no final. Um dos melhores exercícios para isquiotibial.' },
+      { id:'stepup-chair', name:'Step-Up na Cadeira', sets:3, reps:'12 cada', rest:75, note:'Suba totalmente estendendo o quadril. Simula leg press unilateral.' },
+      { id:'ab-wheel-towel', name:'Ab Wheel com Toalha no Chão', sets:4, reps:'8-10', rest:75, note:'Toalha dobrada sob as mãos desliza no chão. Idêntico ao ab wheel.', core:true },
+      { id:'copenhagen-bed', name:'Copenhagen Plank (perna na cama)', sets:3, reps:'20-30 seg cada', rest:60, note:'Perna superior apoiada na cama. Adutores e core.', core:true },
+    ]},
+  ]
+};
+
+// ── RUNNING PROGRAM ──────────────────────────────────────────────────────────
+// 6 semanas até 07/06/2026 — do zero ao 5km
+var RUNNING_START = new Date('2026-04-23');
+var RACE_DATE = new Date('2026-06-07');
+
+var RUNNING_WEEKS = [
+  { week:1, label:'Adaptação ao Impacto', sessions:[
+    { id:'run-w1-s1', name:'Corrida Semana 1 · A', desc:'Run/Walk · 25 min', protocol:'1 min correndo / 2 min caminhando · 8 ciclos · Total 25 min', tip:'Se conseguir falar frases completas, está no ritmo certo. Mais devagar é melhor.' },
+    { id:'run-w1-s2', name:'Corrida Semana 1 · B', desc:'Run/Walk · 28 min', protocol:'1 min correndo / 2 min caminhando · 9 ciclos · Total 27 min', tip:'Mantenha postura ereta, passada curta e cadência alta.' },
+    { id:'run-w1-s3', name:'Corrida Semana 1 · C (opcional)', desc:'Run/Walk · 25 min', protocol:'1 min correndo / 2 min caminhando · 8 ciclos · Total 25 min', tip:'Sessão opcional. Se sentir dor na canela, pule esta semana.' },
+  ]},
+  { week:2, label:'Aumentar Proporção', sessions:[
+    { id:'run-w2-s1', name:'Corrida Semana 2 · A', desc:'Run/Walk · 30 min', protocol:'2 min correndo / 1 min caminhando · 10 ciclos · Total 30 min', tip:'O esforço vai aumentar — é normal. Mantenha o ritmo de conversa.' },
+    { id:'run-w2-s2', name:'Corrida Semana 2 · B', desc:'Run/Walk · 30 min', protocol:'2 min correndo / 1 min caminhando · 10 ciclos · Total 30 min', tip:'Foque na respiração: inspire 3 passos, expire 2.' },
+    { id:'run-w2-s3', name:'Corrida Semana 2 · C (opcional)', desc:'Run/Walk · 28 min', protocol:'2 min correndo / 1 min caminhando · 9 ciclos · Total 27 min', tip:'Opcional. Só faça se as pernas estiverem bem recuperadas.' },
+  ]},
+  { week:3, label:'Primeira Corrida Contínua', sessions:[
+    { id:'run-w3-s1', name:'Corrida Semana 3 · A', desc:'Run/Walk · 32 min', protocol:'3 min correndo / 1 min caminhando · 8 ciclos · Total 32 min', tip:'Trecho de corrida dobrou — mantenha ritmo leve.' },
+    { id:'run-w3-s2', name:'Corrida Semana 3 · B', desc:'Run/Walk · 32 min', protocol:'3 min correndo / 1 min caminhando · 8 ciclos · Total 32 min', tip:'Se sentir fôlego sobrando, não acelere — guarde para as próximas semanas.' },
+    { id:'run-w3-s3', name:'Corrida Semana 3 · C — Primeiro contínuo!', desc:'10 min contínuos', protocol:'5 min aquecimento caminhando / 10 min correndo contínuo / 5 min volta à calma', tip:'Marco importante. Ritmo que dê para conversar. Se precisar parar, tudo bem.' },
+  ]},
+  { week:4, label:'Consolidar 20 min', sessions:[
+    { id:'run-w4-s1', name:'Corrida Semana 4 · A', desc:'Run/Walk · 35 min', protocol:'5 min correndo / 1 min caminhando · 5 ciclos · Total 30 min + aquecimento', tip:'Trechos de 5 min — você já está ficando corredor.' },
+    { id:'run-w4-s2', name:'Corrida Semana 4 · B', desc:'Run/Walk · 35 min', protocol:'5 min correndo / 1 min caminhando · 5 ciclos · Total 30 min + aquecimento', tip:'Observe seu ritmo natural — não force.' },
+    { id:'run-w4-s3', name:'Corrida Semana 4 · C — 20 min contínuos', desc:'20 min contínuos', protocol:'5 min aquecimento / 20 min correndo contínuo / 5 min volta à calma', tip:'Metade do objetivo! Ritmo confortável até o fim.' },
+  ]},
+  { week:5, label:'Aproximar dos 30 min', sessions:[
+    { id:'run-w5-s1', name:'Corrida Semana 5 · A', desc:'Run/Walk · 40 min', protocol:'8 min correndo / 1 min caminhando · 3 blocos · Total 27 min correndo', tip:'Blocos longos. Se aguentar, tente não parar na caminhada.' },
+    { id:'run-w5-s2', name:'Corrida Semana 5 · B', desc:'Run/Walk · 40 min', protocol:'8 min correndo / 1 min caminhando · 3 blocos · Total 27 min correndo', tip:'Última semana antes do simulado. Guarde energia.' },
+    { id:'run-w5-s3', name:'Corrida Semana 5 · C — 25 min contínuos', desc:'25 min contínuos', protocol:'5 min aquecimento / 25 min correndo contínuo / 5 min volta à calma', tip:'Quase lá. 25 min equivale a aproximadamente 3-3,5 km.' },
+  ]},
+  { week:6, label:'Semana do Simulado', sessions:[
+    { id:'run-w6-s1', name:'Corrida Semana 6 · A — 30 min', desc:'30 min contínuos', protocol:'5 min aquecimento / 30 min correndo contínuo / 5 min volta à calma', tip:'Ritmo leve. Você está pronto para isso.' },
+    { id:'run-w6-s2', name:'Corrida Semana 6 · B — Com aceleração', desc:'30 min com variação', protocol:'5 min aquecimento / 10 min leve / 5 min um pouco mais rápido / 10 min leve / 5 min volta', tip:'Teste acelerar no meio — será útil na prova.' },
+    { id:'run-w6-s3', name:'Simulado 5km — Corrida completa!', desc:'5km contínuos sem parar', protocol:'10 min aquecimento caminhando / 5km no seu ritmo / 5-10 min volta à calma', tip:'Objetivo único: cruzar os 5km sem parar. Pace não importa. Este é seu dry run.' },
+  ]},
+  { week:7, label:'Taper — Semana da Prova', sessions:[
+    { id:'run-w7-s1', name:'Taper · A — Manutenção', desc:'20 min leve', protocol:'5 min aquecimento / 20 min ritmo leve / 5 min volta', tip:'Manter as pernas ativas sem acumular fadiga.' },
+    { id:'run-w7-s2', name:'Taper · B — Véspera', desc:'10 min muito leve + alongamento', protocol:'10 min caminhada/trote leve / 15 min alongamento focado em panturrilha, quadril e isquiotibial', tip:'Última sessão antes da prova. Leve e relaxante.' },
+  ]},
+];
+
+function getRunningWeek() {
+  var today = new Date(); today.setHours(0,0,0,0);
+  var start = new Date(RUNNING_START); start.setHours(0,0,0,0);
+  var daysDiff = Math.floor((today - start) / 86400000);
+  var week = Math.floor(daysDiff / 7) + 1;
+  return Math.min(7, Math.max(1, week));
+}
+
+function getCurrentRunSessions() {
+  var week = getRunningWeek();
+  for (var i = 0; i < RUNNING_WEEKS.length; i++) {
+    if (RUNNING_WEEKS[i].week === week) return RUNNING_WEEKS[i];
+  }
+  return RUNNING_WEEKS[0];
+}
+
 var YT = {
   'bench':'supino barra execução correta',
   'ohp':'desenvolvimento halteres ombro execução',
@@ -752,7 +887,28 @@ var YT = {
   'hiit-4x4':'protocolo 4x4 noruegues HIIT',
   'mobility-wed':'mobilidade quadril toracica exercicio',
   'warmup-hiit':'aquecimento cardio tecnica',
-  'cooldown-hiit':'cool down recuperacao cardio'
+  'cooldown-hiit':'cool down recuperacao cardio',
+  'pushup':'flexão de braço execução correta',
+  'pike-pushup':'pike push-up ombros execução',
+  'diamond-pushup':'flexão diamante triceps execução',
+  'archer-pushup':'flexão archer unilateral execução',
+  'bulgarian-bw':'agachamento bulgaro peso corporal execução',
+  'pistol-assisted':'pistol squat assistido execução',
+  'sumo-pause':'agachamento sumo pausa execução',
+  'calf-unipodal':'panturrilha unipodal execução',
+  'hip-thrust-bed':'hip thrust pés na cama execução',
+  'inverted-row':'remada invertida mesa execução',
+  'face-pull-towel':'face pull toalha porta execução',
+  'curl-towel':'rosca isometrica toalha execução',
+  'wide-pushup':'flexão aberta costas execução',
+  'door-hang':'dead hang batente porta grip',
+  'pallof-towel':'pallof press toalha porta execução',
+  'rdl-unipodal':'rdl unipodal mochila execução',
+  'hip-thrust-bed2':'hip thrust pés na cama glúteo',
+  'nordic-curl':'nordic curl isquiotibial execução',
+  'stepup-chair':'step up cadeira execução',
+  'ab-wheel-towel':'ab wheel toalha chão execução',
+  'copenhagen-bed':'copenhagen plank cama execução'
 };
 
 function openYT(id) {
@@ -985,6 +1141,7 @@ function getRecommendedWorkout(h) {
 function buildHeroCard(h) {
   var heroWrap = document.getElementById('hero-card-wrap');
   if (!heroWrap) return;
+  if (currentMode === 'run') { heroWrap.innerHTML = ''; return; }
   var w = getRecommendedWorkout(h);
   if (!w) { heroWrap.innerHTML = ''; return; }
   var last = null;
@@ -1236,24 +1393,35 @@ function updateRestOverlayDisplay() {
   if (r <= 0) { overlayEl.classList.remove('active'); }
 }
 
-function buildHome() {
+// ── MODE MANAGEMENT ─────────────────────────────────────────────────────────
+var currentMode = 'gym';
+
+function setMode(mode) {
+  currentMode = mode;
+  var btns = ['gym','hotel','run'];
+  for (var i = 0; i < btns.length; i++) {
+    var b = document.getElementById('mode-' + btns[i]);
+    if (b) b.className = 'mode-btn ' + btns[i] + (btns[i] === mode ? ' active' : '');
+  }
+  var strSection = document.getElementById('strength-section');
+  var runSection = document.getElementById('running-section');
+  if (mode === 'run') {
+    if (strSection) strSection.style.display = 'none';
+    if (runSection) runSection.style.display = 'block';
+    buildRunningSection();
+  } else {
+    if (strSection) strSection.style.display = 'block';
+    if (runSection) runSection.style.display = 'none';
+    buildStrengthCards(mode);
+  }
+}
+
+function buildStrengthCards(mode) {
   var h = getHistory();
-  var now = new Date();
-  var ws = new Date(now);
-  ws.setDate(now.getDate() - now.getDay());
-  document.getElementById('stat-total').textContent = h.length;
-  var thisWeek = 0;
-  for (var i = 0; i < h.length; i++) { if (new Date(h[i].date) >= ws) thisWeek++; }
-  document.getElementById('stat-week').textContent = thisWeek;
-  document.getElementById('stat-streak').textContent = calcStreak(h);
-  buildWeekBanner();
-  buildBWStrip();
-  buildAbsenceBanner(h);
-  buildHeroCard(h);
-  buildStagAlerts();
   var sc = document.getElementById('strength-cards'); sc.innerHTML = '';
-  for (var j = 0; j < PROGRAM.strength.length; j++) {
-    var w = PROGRAM.strength[j];
+  var strengthData = (mode === 'hotel') ? HOTEL.strength : PROGRAM.strength;
+  for (var j = 0; j < strengthData.length; j++) {
+    var w = strengthData[j];
     var last = null;
     for (var k = 0; k < h.length; k++) { if (h[k].workoutId === w.id) { last = h[k]; break; } }
     sc.appendChild(mkDayCard(w, last));
@@ -1265,8 +1433,123 @@ function buildHome() {
     for (var k2 = 0; k2 < h.length; k2++) { if (h[k2].workoutId === wc.id) { lastc = h[k2]; break; } }
     cc.appendChild(mkDayCard(wc, lastc));
   }
-  var active = getActiveSession();
-  if (active) showResumeBar(active);
+}
+
+function buildRunningSection() {
+  var el = document.getElementById('run-content'); if (!el) return;
+  el.innerHTML = '';
+  var today = new Date(); today.setHours(0,0,0,0);
+  var race = new Date(RACE_DATE); race.setHours(0,0,0,0);
+  var daysLeft = Math.max(0, Math.floor((race - today) / 86400000));
+  // Race countdown banner
+  var raceBanner = document.createElement('div'); raceBanner.className = 'run-race-banner';
+  var raceText = daysLeft === 0 ? 'DIA DA PROVA! Boa corrida!' : daysLeft === 1 ? 'Amanhã é a prova!' : daysLeft + ' dias para o 5km';
+  raceBanner.innerHTML = '<div class="run-race-icon">🏁<\/div>'
+    + '<div class="run-race-info">'
+      + '<div class="run-race-title">' + raceText + '<\/div>'
+      + '<div class="run-race-sub">07 de junho de 2026 · Meta: completar 5km<\/div>'
+    + '<\/div>';
+  el.appendChild(raceBanner);
+  // Current week
+  var weekNum = getRunningWeek();
+  var weekData = null;
+  for (var i = 0; i < RUNNING_WEEKS.length; i++) { if (RUNNING_WEEKS[i].week === weekNum) { weekData = RUNNING_WEEKS[i]; break; } }
+  if (weekData) {
+    var lbl = document.createElement('div'); lbl.className = 'section-label';
+    lbl.textContent = 'Semana Atual — ' + weekData.label; el.appendChild(lbl);
+    var card = buildRunWeekCard(weekData, true); el.appendChild(card);
+  }
+  // Other weeks
+  var otherLbl = document.createElement('div'); otherLbl.className = 'section-label';
+  otherLbl.textContent = 'Programa Completo — 7 semanas'; el.appendChild(otherLbl);
+  for (var j = 0; j < RUNNING_WEEKS.length; j++) {
+    if (RUNNING_WEEKS[j].week !== weekNum) {
+      el.appendChild(buildRunWeekCard(RUNNING_WEEKS[j], false));
+    }
+  }
+}
+
+function buildRunWeekCard(weekData, isCurrent) {
+  var h = getHistory();
+  var card = document.createElement('div'); card.className = 'run-week-card';
+  if (!isCurrent) card.style.opacity = '0.7';
+  var doneSessions = 0;
+  for (var s = 0; s < weekData.sessions.length; s++) {
+    for (var hi = 0; hi < h.length; hi++) { if (h[hi].workoutId === weekData.sessions[s].id) { doneSessions++; break; } }
+  }
+  card.innerHTML = '<div class="run-week-header">'
+    + '<div class="run-week-label">Semana ' + weekData.week + (isCurrent ? ' · Atual' : '') + '<\/div>'
+    + '<div class="run-week-title">' + weekData.label + '<\/div>'
+    + '<div class="run-week-days">' + doneSessions + ' de ' + weekData.sessions.length + ' sessões concluídas<\/div>'
+    + '<\/div>';
+  for (var si = 0; si < weekData.sessions.length; si++) {
+    var sess = weekData.sessions[si];
+    var done = false;
+    for (var hi2 = 0; hi2 < h.length; hi2++) { if (h[hi2].workoutId === sess.id) { done = true; break; } }
+    var row = document.createElement('div'); row.className = 'run-session-row';
+    (function(s) {
+      row.onclick = function() { startRunSession(s); };
+    })(sess);
+    row.innerHTML = '<div class="run-session-name">'
+      + (done ? '✅ ' : '▶ ')
+      + sess.name + '<\/div>'
+      + '<div class="run-session-desc">' + sess.desc + '<\/div>';
+    card.appendChild(row);
+  }
+  return card;
+}
+
+function startRunSession(sess) {
+  // Build a workout-like object for the running session
+  var runWorkout = {
+    id: sess.id,
+    name: sess.name,
+    day: 'Corrida',
+    type: 'cardio',
+    icon: '🏃',
+    desc: sess.desc,
+    exercises: [
+      { id: sess.id + '-main', name: sess.name, sets:1, reps:sess.desc, rest:0, note: sess.protocol + ' · ' + sess.tip }
+    ]
+  };
+  sessionData = {}; sessionNote = ''; workoutStartTime = Date.now(); previewMode = false;
+  currentWorkout = runWorkout;
+  requestNotifPermission(); saveSession();
+  document.getElementById('wo-title').textContent = sess.name;
+  document.getElementById('wo-date').textContent = fmtDate(new Date());
+  var cancelBtn = document.getElementById('cancel-workout-btn');
+  if (cancelBtn) cancelBtn.style.display = 'block';
+  buildWorkoutScreen(false);
+  navigate('home', 'workout');
+  clearInterval(sessionTimer);
+  sessionTimer = setInterval(function() {
+    var el = document.getElementById('wo-timer-mini');
+    if (el) el.textContent = fmtSecs(Math.floor((Date.now() - workoutStartTime) / 1000));
+  }, 1000);
+}
+
+function buildHome() {
+  try {
+    var h = getHistory();
+    var now = new Date();
+    var ws = new Date(now);
+    ws.setDate(now.getDate() - now.getDay());
+    var statTotal = document.getElementById('stat-total');
+    var statWeek = document.getElementById('stat-week');
+    var statStreak = document.getElementById('stat-streak');
+    if (statTotal) statTotal.textContent = h.length;
+    var thisWeek = 0;
+    for (var i = 0; i < h.length; i++) { if (new Date(h[i].date) >= ws) thisWeek++; }
+    if (statWeek) statWeek.textContent = thisWeek;
+    if (statStreak) statStreak.textContent = calcStreak(h);
+  } catch(e) {}
+  try { buildWeekBanner(); } catch(e) {}
+  try { buildBWStrip(); } catch(e) {}
+  try { buildAbsenceBanner(getHistory()); } catch(e) {}
+  try { buildHeroCard(getHistory()); } catch(e) {}
+  try { buildStagAlerts(); } catch(e) {}
+  try { buildStrengthCards(currentMode); } catch(e) { buildStrengthCards('gym'); }
+  try { var active = getActiveSession(); if (active) showResumeBar(active); } catch(e) {}
 }
 
 function mkDayCard(w, last) {
@@ -1526,10 +1809,23 @@ function toggleSet(exId, idx, rest) {
 }
 
 function findEx(id) {
-  var all = PROGRAM.strength.concat(PROGRAM.cardio);
+  var all = PROGRAM.strength.concat(PROGRAM.cardio).concat(HOTEL.strength);
   for (var i = 0; i < all.length; i++) {
     for (var j = 0; j < all[i].exercises.length; j++) {
       if (all[i].exercises[j].id === id) return all[i].exercises[j];
+    }
+  }
+  return null;
+}
+
+function findWorkout(id) {
+  var all = PROGRAM.strength.concat(PROGRAM.cardio).concat(HOTEL.strength);
+  for (var i = 0; i < all.length; i++) { if (all[i].id === id) return all[i]; }
+  // Check running sessions
+  for (var w = 0; w < RUNNING_WEEKS.length; w++) {
+    for (var s = 0; s < RUNNING_WEEKS[w].sessions.length; s++) {
+      var sess = RUNNING_WEEKS[w].sessions[s];
+      if (sess.id === id) return { id:sess.id, name:sess.name, type:'cardio', exercises:[] };
     }
   }
   return null;
@@ -1539,33 +1835,11 @@ function findEx(id) {
 // == SERVICE WORKER & NOTIFICATIONS ==
 var swReg = null;
 
-function getSwPath() {
-  // Detect correct SW path for GitHub Pages subpath or root
-  var loc = window.location.pathname;
-  var base = loc.replace(/\/[^\/]*$/, '') || '';
-  return base + '/sw.js';
-}
-
 function initServiceWorker() {
-  if (!('serviceWorker' in navigator)) return;
-  var swPath = getSwPath();
-  navigator.serviceWorker.register(swPath).then(function(reg) {
-    swReg = reg;
-    // If SW is installing, wait for it to become active
-    if (reg.installing) {
-      reg.installing.addEventListener('statechange', function() {
-        if (this.state === 'activated') swReg = reg;
-      });
-    }
-  }).catch(function(e) {
-    console.log('SW registration failed:', e);
-  });
+  // SW blocked on github.io (non app-bound domain on iOS)
+  // Fallback: use direct Notification API when app is in foreground
+  // and visibilitychange for background recovery
   patchTimerDone();
-}
-
-function getActiveSW() {
-  if (!swReg) return null;
-  return swReg.active || swReg.installing || swReg.waiting || null;
 }
 
 function requestNotifPermission() {
@@ -1573,28 +1847,33 @@ function requestNotifPermission() {
   if (Notification.permission === 'default') {
     Notification.requestPermission().then(function(perm) {
       if (perm === 'granted') showToast('Notificações ativadas! 🔔');
-    });
+    }).catch(function() {});
   }
 }
 
+var notifTimeout = null;
+
 function sendRestNotification(sec) {
+  // Clear any pending notification
+  if (notifTimeout) { clearTimeout(notifTimeout); notifTimeout = null; }
   if (!('Notification' in window)) return;
   if (Notification.permission !== 'granted') return;
-  var sw = getActiveSW();
-  if (sw) {
-    sw.postMessage({
-      type: 'START_REST_TIMER',
-      sec: sec,
-      endTime: Date.now() + sec * 1000
-    });
-  }
+  // Schedule notification — works when screen is on, app in background
+  notifTimeout = setTimeout(function() {
+    notifTimeout = null;
+    if (!restEndTime) return; // timer was skipped
+    try {
+      new Notification('Descanso concluído! 💪', {
+        body: 'Hora da próxima série.',
+        tag: 'rest-timer',
+        silent: false
+      });
+    } catch(e) {}
+  }, sec * 1000);
 }
 
 function cancelRestNotification() {
-  var sw = getActiveSW();
-  if (sw) {
-    sw.postMessage({ type: 'CANCEL_REST_TIMER' });
-  }
+  if (notifTimeout) { clearTimeout(notifTimeout); notifTimeout = null; }
 }
 
 function playBeeps() {
