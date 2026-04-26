@@ -793,38 +793,290 @@ var RACE_DATE = new Date('2026-06-07');
 
 var RUNNING_WEEKS = [
   { week:1, label:'Adaptação ao Impacto', sessions:[
-    { id:'run-w1-s1', name:'Corrida Semana 1 · A', desc:'Run/Walk · 25 min', protocol:'1 min correndo / 2 min caminhando · 8 ciclos · Total 25 min', tip:'Se conseguir falar frases completas, está no ritmo certo. Mais devagar é melhor.' },
-    { id:'run-w1-s2', name:'Corrida Semana 1 · B', desc:'Run/Walk · 28 min', protocol:'1 min correndo / 2 min caminhando · 9 ciclos · Total 27 min', tip:'Mantenha postura ereta, passada curta e cadência alta.' },
-    { id:'run-w1-s3', name:'Corrida Semana 1 · C (opcional)', desc:'Run/Walk · 25 min', protocol:'1 min correndo / 2 min caminhando · 8 ciclos · Total 25 min', tip:'Sessão opcional. Se sentir dor na canela, pule esta semana.' },
+    {
+      id:'run-w1-s1', name:'Corrida Semana 1 · A',
+      desc:'Run/Walk · 25 min · FC 60-65%',
+      pace:'Pace alvo: 8:30-9:30 min/km — ritmo de caminhada acelerada',
+      fc:'FC alvo: 102-117 bpm (56-65% de FC máx estimada de 181 bpm)',
+      structure:[
+        {phase:'Aquecimento', dur:'3 min', note:'Caminhada normal, respire fundo'},
+        {phase:'Bloco principal', dur:'19 min', note:'Alterne: 1 min correndo leve + 2 min caminhando · Repita 6 ciclos'},
+        {phase:'Volta à calma', dur:'3 min', note:'Caminhada lenta com respiração controlada'},
+      ],
+      tip:'Teste da fala: durante os trechos de corrida, você deve conseguir falar frases completas sem pausar. Se não conseguir, está rápido demais.',
+      alert:''
+    },
+    {
+      id:'run-w1-s2', name:'Corrida Semana 1 · B',
+      desc:'Run/Walk · 27 min · FC 60-65%',
+      pace:'Pace alvo: 8:30-9:30 min/km — mesmo ritmo da sessão A',
+      fc:'FC alvo: 102-117 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'3 min', note:'Caminhada normal'},
+        {phase:'Bloco principal', dur:'21 min', note:'1 min correndo + 2 min caminhando · Repita 7 ciclos'},
+        {phase:'Volta à calma', dur:'3 min', note:'Caminhada lenta'},
+      ],
+      tip:'Postura: olhar para o horizonte, não para o chão. Ombros soltos. Braços dobrados a 90° balançando naturalmente.',
+      alert:''
+    },
+    {
+      id:'run-w1-s3', name:'Corrida Semana 1 · C (opcional)',
+      desc:'Run/Walk · 25 min · Opcional',
+      pace:'Pace alvo: 8:30-9:30 min/km',
+      fc:'FC alvo: 102-117 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'3 min', note:'Caminhada'},
+        {phase:'Bloco principal', dur:'19 min', note:'1 min correndo + 2 min caminhando · 6 ciclos'},
+        {phase:'Volta à calma', dur:'3 min', note:'Caminhada lenta'},
+      ],
+      tip:'Sessão opcional — só faça se estiver sem dor nas canelas ou joelhos. A recuperação é parte do treino.',
+      alert:'Se sentir dor na canela (canelite), pule esta sessão e descanse mais 1 dia.'
+    },
   ]},
   { week:2, label:'Aumentar Proporção', sessions:[
-    { id:'run-w2-s1', name:'Corrida Semana 2 · A', desc:'Run/Walk · 30 min', protocol:'2 min correndo / 1 min caminhando · 10 ciclos · Total 30 min', tip:'O esforço vai aumentar — é normal. Mantenha o ritmo de conversa.' },
-    { id:'run-w2-s2', name:'Corrida Semana 2 · B', desc:'Run/Walk · 30 min', protocol:'2 min correndo / 1 min caminhando · 10 ciclos · Total 30 min', tip:'Foque na respiração: inspire 3 passos, expire 2.' },
-    { id:'run-w2-s3', name:'Corrida Semana 2 · C (opcional)', desc:'Run/Walk · 28 min', protocol:'2 min correndo / 1 min caminhando · 9 ciclos · Total 27 min', tip:'Opcional. Só faça se as pernas estiverem bem recuperadas.' },
+    {
+      id:'run-w2-s1', name:'Corrida Semana 2 · A',
+      desc:'Run/Walk · 30 min · FC 62-68%',
+      pace:'Pace alvo: 8:00-9:00 min/km — levemente mais confortável que semana 1',
+      fc:'FC alvo: 112-123 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'3 min', note:'Caminhada normal'},
+        {phase:'Bloco principal', dur:'24 min', note:'2 min correndo + 1 min caminhando · Repita 8 ciclos'},
+        {phase:'Volta à calma', dur:'3 min', note:'Caminhada lenta'},
+      ],
+      tip:'A proporção inverteu — agora você corre mais do que caminha. O esforço vai aumentar, é normal. Mantenha o pace lento.',
+      alert:''
+    },
+    {
+      id:'run-w2-s2', name:'Corrida Semana 2 · B',
+      desc:'Run/Walk · 30 min · FC 62-68%',
+      pace:'Pace alvo: 8:00-9:00 min/km',
+      fc:'FC alvo: 112-123 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'3 min', note:'Caminhada'},
+        {phase:'Bloco principal', dur:'24 min', note:'2 min correndo + 1 min caminhando · 8 ciclos'},
+        {phase:'Volta à calma', dur:'3 min', note:'Caminhada lenta'},
+      ],
+      tip:'Respiração: inspire pelo nariz em 3 passos, expire pela boca em 2 passos. Ritmo 3:2. Leva alguns treinos para naturalizar.',
+      alert:''
+    },
+    {
+      id:'run-w2-s3', name:'Corrida Semana 2 · C (opcional)',
+      desc:'Run/Walk · 27 min · Opcional',
+      pace:'Pace alvo: 8:00-9:00 min/km',
+      fc:'FC alvo: 112-123 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'3 min', note:'Caminhada'},
+        {phase:'Bloco principal', dur:'21 min', note:'2 min correndo + 1 min caminhando · 7 ciclos'},
+        {phase:'Volta à calma', dur:'3 min', note:'Caminhada lenta'},
+      ],
+      tip:'Opcional. Só faça se as pernas estiverem completamente recuperadas das duas sessões anteriores.',
+      alert:''
+    },
   ]},
   { week:3, label:'Primeira Corrida Contínua', sessions:[
-    { id:'run-w3-s1', name:'Corrida Semana 3 · A', desc:'Run/Walk · 32 min', protocol:'3 min correndo / 1 min caminhando · 8 ciclos · Total 32 min', tip:'Trecho de corrida dobrou — mantenha ritmo leve.' },
-    { id:'run-w3-s2', name:'Corrida Semana 3 · B', desc:'Run/Walk · 32 min', protocol:'3 min correndo / 1 min caminhando · 8 ciclos · Total 32 min', tip:'Se sentir fôlego sobrando, não acelere — guarde para as próximas semanas.' },
-    { id:'run-w3-s3', name:'Corrida Semana 3 · C — Primeiro contínuo!', desc:'10 min contínuos', protocol:'5 min aquecimento caminhando / 10 min correndo contínuo / 5 min volta à calma', tip:'Marco importante. Ritmo que dê para conversar. Se precisar parar, tudo bem.' },
+    {
+      id:'run-w3-s1', name:'Corrida Semana 3 · A',
+      desc:'Run/Walk · 32 min · FC 63-70%',
+      pace:'Pace alvo: 7:45-8:45 min/km — trechos de 3 min exigem ritmo um pouco mais econômico',
+      fc:'FC alvo: 114-127 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'3 min', note:'Caminhada'},
+        {phase:'Bloco principal', dur:'26 min', note:'3 min correndo + 1 min caminhando · Repita 6-7 ciclos'},
+        {phase:'Volta à calma', dur:'3 min', note:'Caminhada lenta'},
+      ],
+      tip:'Trechos de 3 minutos são um salto real. Se precisar caminhar antes do 1 min, tudo bem — o objetivo é continuar em movimento.',
+      alert:''
+    },
+    {
+      id:'run-w3-s2', name:'Corrida Semana 3 · B',
+      desc:'Run/Walk · 32 min · FC 63-70%',
+      pace:'Pace alvo: 7:45-8:45 min/km',
+      fc:'FC alvo: 114-127 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'3 min', note:'Caminhada'},
+        {phase:'Bloco principal', dur:'26 min', note:'3 min correndo + 1 min caminhando · 6-7 ciclos'},
+        {phase:'Volta à calma', dur:'3 min', note:'Caminhada lenta'},
+      ],
+      tip:'Se o fôlego sobrar ao final dos 3 min, não acelere — guarde para aumentar a distância nas semanas seguintes.',
+      alert:''
+    },
+    {
+      id:'run-w3-s3', name:'Corrida Semana 3 · C — 1º Contínuo!',
+      desc:'10 min contínuos · Marco do programa',
+      pace:'Pace alvo: 8:30-9:30 min/km — mais lento que as sessões A e B deliberadamente',
+      fc:'FC alvo: 108-120 bpm — tão baixo que pareça fácil demais',
+      structure:[
+        {phase:'Aquecimento', dur:'5 min', note:'Caminhada normal'},
+        {phase:'Corrida contínua', dur:'10 min', note:'Ritmo que permita conversar sem parar. Não olhe o pace, olhe a respiração.'},
+        {phase:'Volta à calma', dur:'5 min', note:'Caminhada lenta + alongamento leve de panturrilha'},
+      ],
+      tip:'Marco importante do programa. Não se preocupe com o tempo ou distância percorrida — o objetivo é 10 min sem parar, no ritmo que for.',
+      alert:'Se precisar parar antes dos 10 min, retome a caminhada por 1 min e volte a correr. Isso ainda conta como sucesso.'
+    },
   ]},
-  { week:4, label:'Consolidar 20 min', sessions:[
-    { id:'run-w4-s1', name:'Corrida Semana 4 · A', desc:'Run/Walk · 35 min', protocol:'5 min correndo / 1 min caminhando · 5 ciclos · Total 30 min + aquecimento', tip:'Trechos de 5 min — você já está ficando corredor.' },
-    { id:'run-w4-s2', name:'Corrida Semana 4 · B', desc:'Run/Walk · 35 min', protocol:'5 min correndo / 1 min caminhando · 5 ciclos · Total 30 min + aquecimento', tip:'Observe seu ritmo natural — não force.' },
-    { id:'run-w4-s3', name:'Corrida Semana 4 · C — 20 min contínuos', desc:'20 min contínuos', protocol:'5 min aquecimento / 20 min correndo contínuo / 5 min volta à calma', tip:'Metade do objetivo! Ritmo confortável até o fim.' },
+  { week:4, label:'Consolidar 20 min Contínuos', sessions:[
+    {
+      id:'run-w4-s1', name:'Corrida Semana 4 · A',
+      desc:'Run/Walk · 35 min · FC 65-72%',
+      pace:'Pace alvo: 7:30-8:30 min/km — seu ritmo natural começa a aparecer aqui',
+      fc:'FC alvo: 118-130 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'5 min', note:'Caminhada'},
+        {phase:'Bloco principal', dur:'27 min', note:'5 min correndo + 1 min caminhando · Repita 4-5 ciclos'},
+        {phase:'Volta à calma', dur:'3 min', note:'Caminhada lenta'},
+      ],
+      tip:'Blocos de 5 min são o dobro da semana passada. Se sentir que está forçando demais no 4º ou 5º minuto, reduza o pace, não pare.',
+      alert:''
+    },
+    {
+      id:'run-w4-s2', name:'Corrida Semana 4 · B',
+      desc:'Run/Walk · 35 min · FC 65-72%',
+      pace:'Pace alvo: 7:30-8:30 min/km',
+      fc:'FC alvo: 118-130 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'5 min', note:'Caminhada'},
+        {phase:'Bloco principal', dur:'27 min', note:'5 min correndo + 1 min caminhando · 4-5 ciclos'},
+        {phase:'Volta à calma', dur:'3 min', note:'Caminhada lenta'},
+      ],
+      tip:'Observe seu ritmo natural nesta sessão — não force. O pace que emerge espontaneamente é o que você usará na prova.',
+      alert:''
+    },
+    {
+      id:'run-w4-s3', name:'Corrida Semana 4 · C — 20 min Contínuos',
+      desc:'20 min contínuos · Metade do objetivo',
+      pace:'Pace alvo: 8:00-9:00 min/km — 30 seg mais lento que as sessões A/B. Não se engane.',
+      fc:'FC alvo: 112-120 bpm — confortável o suficiente para cantar',
+      structure:[
+        {phase:'Aquecimento', dur:'5 min', note:'Caminhada normal'},
+        {phase:'Corrida contínua', dur:'20 min', note:'Ritmo conversacional absoluto. Se a FC subir acima de 130, reduza.'},
+        {phase:'Volta à calma', dur:'5 min', note:'Caminhada + alongamento de quadríceps e panturrilha'},
+      ],
+      tip:'20 min contínuos é a metade do tempo que você precisará na prova. O segredo é não tentar provar nada aqui — chegue bem ao final.',
+      alert:''
+    },
   ]},
   { week:5, label:'Aproximar dos 30 min', sessions:[
-    { id:'run-w5-s1', name:'Corrida Semana 5 · A', desc:'Run/Walk · 40 min', protocol:'8 min correndo / 1 min caminhando · 3 blocos · Total 27 min correndo', tip:'Blocos longos. Se aguentar, tente não parar na caminhada.' },
-    { id:'run-w5-s2', name:'Corrida Semana 5 · B', desc:'Run/Walk · 40 min', protocol:'8 min correndo / 1 min caminhando · 3 blocos · Total 27 min correndo', tip:'Última semana antes do simulado. Guarde energia.' },
-    { id:'run-w5-s3', name:'Corrida Semana 5 · C — 25 min contínuos', desc:'25 min contínuos', protocol:'5 min aquecimento / 25 min correndo contínuo / 5 min volta à calma', tip:'Quase lá. 25 min equivale a aproximadamente 3-3,5 km.' },
+    {
+      id:'run-w5-s1', name:'Corrida Semana 5 · A',
+      desc:'Run/Walk · 40 min · FC 65-73%',
+      pace:'Pace alvo: 7:15-8:15 min/km — você já é um corredor',
+      fc:'FC alvo: 118-132 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'5 min', note:'Caminhada'},
+        {phase:'Bloco 1', dur:'8 min', note:'Corrida leve — pace confortável'},
+        {phase:'Recuperação', dur:'1 min', note:'Caminhada'},
+        {phase:'Bloco 2', dur:'8 min', note:'Corrida leve'},
+        {phase:'Recuperação', dur:'1 min', note:'Caminhada'},
+        {phase:'Bloco 3', dur:'8 min', note:'Corrida leve'},
+        {phase:'Volta à calma', dur:'5 min', note:'Caminhada lenta + alongamento'},
+      ],
+      tip:'Tente não usar os minutos de caminhada como descanso completo — use como troca de ritmo, não como parada.',
+      alert:''
+    },
+    {
+      id:'run-w5-s2', name:'Corrida Semana 5 · B',
+      desc:'Run/Walk · 40 min · FC 65-73%',
+      pace:'Pace alvo: 7:15-8:15 min/km',
+      fc:'FC alvo: 118-132 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'5 min', note:'Caminhada'},
+        {phase:'Bloco 1', dur:'8 min', note:'Corrida leve'},
+        {phase:'Recuperação', dur:'1 min', note:'Caminhada'},
+        {phase:'Bloco 2', dur:'8 min', note:'Corrida leve'},
+        {phase:'Recuperação', dur:'1 min', note:'Caminhada'},
+        {phase:'Bloco 3', dur:'8 min', note:'Corrida leve'},
+        {phase:'Volta à calma', dur:'5 min', note:'Caminhada lenta'},
+      ],
+      tip:'Última semana Run/Walk antes do simulado. Guarde energia — não tente provar que está pronto.',
+      alert:''
+    },
+    {
+      id:'run-w5-s3', name:'Corrida Semana 5 · C — 25 min Contínuos',
+      desc:'25 min contínuos · 3-3,5 km',
+      pace:'Pace alvo: 8:00-9:00 min/km — 3 min contínuos equivale a ~3,0-3,5 km neste ritmo',
+      fc:'FC alvo: 112-125 bpm — conservador deliberadamente',
+      structure:[
+        {phase:'Aquecimento', dur:'5 min', note:'Caminhada'},
+        {phase:'Corrida contínua', dur:'25 min', note:'Ritmo conversacional. Nos últimos 5 min, mantém o pace mesmo se cansado.'},
+        {phase:'Volta à calma', dur:'5 min', note:'Caminhada + alongamento completo: panturrilha, isquiotibial, quadril'},
+      ],
+      tip:'25 min = ~3 a 3,5 km no seu ritmo atual. Você está a uma semana do simulado completo. Chegue bem ao final desta sessão.',
+      alert:''
+    },
   ]},
   { week:6, label:'Semana do Simulado', sessions:[
-    { id:'run-w6-s1', name:'Corrida Semana 6 · A — 30 min', desc:'30 min contínuos', protocol:'5 min aquecimento / 30 min correndo contínuo / 5 min volta à calma', tip:'Ritmo leve. Você está pronto para isso.' },
-    { id:'run-w6-s2', name:'Corrida Semana 6 · B — Com aceleração', desc:'30 min com variação', protocol:'5 min aquecimento / 10 min leve / 5 min um pouco mais rápido / 10 min leve / 5 min volta', tip:'Teste acelerar no meio — será útil na prova.' },
-    { id:'run-w6-s3', name:'Simulado 5km — Corrida completa!', desc:'5km contínuos sem parar', protocol:'10 min aquecimento caminhando / 5km no seu ritmo / 5-10 min volta à calma', tip:'Objetivo único: cruzar os 5km sem parar. Pace não importa. Este é seu dry run.' },
+    {
+      id:'run-w6-s1', name:'Corrida Semana 6 · A — 30 min',
+      desc:'30 min contínuos · ~3,5-4 km',
+      pace:'Pace alvo: 7:30-8:30 min/km — seu pace de prova começa a se definir aqui',
+      fc:'FC alvo: 118-130 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'5 min', note:'Caminhada'},
+        {phase:'Corrida contínua', dur:'30 min', note:'Pace estável. Nos últimos 5 min, avalie se ainda tem reserva de fôlego.'},
+        {phase:'Volta à calma', dur:'5 min', note:'Caminhada lenta'},
+      ],
+      tip:'Se ao completar 30 min você ainda se sentiu bem, seu pace de prova pode ser até 30 seg/km mais rápido que o atual. Anote essa percepção.',
+      alert:''
+    },
+    {
+      id:'run-w6-s2', name:'Corrida Semana 6 · B — Fartlek',
+      desc:'30 min com variação de ritmo',
+      pace:'Base: 8:00-9:00 min/km · Aceleração: 6:30-7:30 min/km por 5 min no meio',
+      fc:'Base: 115-125 bpm · Aceleração: 130-145 bpm',
+      structure:[
+        {phase:'Aquecimento', dur:'5 min', note:'Caminhada'},
+        {phase:'Bloco leve', dur:'10 min', note:'Ritmo base confortável — FC 115-125'},
+        {phase:'Aceleração', dur:'5 min', note:'Aumente o pace voluntariamente — FC até 145. Teste seus limites.'},
+        {phase:'Bloco leve', dur:'10 min', note:'Volta ao ritmo base — recupere sem parar'},
+        {phase:'Volta à calma', dur:'5 min', note:'Caminhada lenta'},
+      ],
+      tip:'O fartlek (brincar com velocidade em sueco) treina sua capacidade de acelerar e recuperar — exatamente o que acontece em provas com subidas, curvas e outros corredores.',
+      alert:''
+    },
+    {
+      id:'run-w6-s3', name:'🏁 Simulado Completo — 5km!',
+      desc:'5km contínuos sem parar · Dry run da prova',
+      pace:'Pace alvo: 8:00-9:00 min/km · Tempo estimado: 40-45 min · NÃO tente bater recorde',
+      fc:'FC alvo: 120-135 bpm nos primeiros 3km · Permitido subir até 145 nos últimos 500m',
+      structure:[
+        {phase:'Aquecimento', dur:'10 min', note:'Caminhada normal — não pule esta etapa'},
+        {phase:'Km 1', dur:'~9 min', note:'MAIS LENTO que parece necessário. A maioria dos iniciantes sai rápido demais e sofre no km 4.'},
+        {phase:'Km 2-3', dur:'~18 min', note:'Ritmo estável. Respiração controlada. Se fôlego estiver ótimo, mantenha — não acelere.'},
+        {phase:'Km 4', dur:'~9 min', note:'Aqui o corpo vai pedir para parar. Reduza o pace 10-15 seg/km se necessário, mas não caminhe.'},
+        {phase:'Km 5 (final)', dur:'~9 min', note:'Últimos 500m: se tiver reserva, aumente o pace. Se não tiver, mantenha.'},
+        {phase:'Volta à calma', dur:'10 min', note:'Caminhada lenta + alongamento completo. Você fez o simulado!'},
+      ],
+      tip:'Objetivo único deste dia: cruzar os 5km sem caminhar. O tempo não importa — importa completar. Isso é sua prova-ensaio.',
+      alert:'Estratégia anti-erro: comece 20 seg/km mais lento do que parece necessário. Você agradece no km 4.'
+    },
   ]},
   { week:7, label:'Taper — Semana da Prova', sessions:[
-    { id:'run-w7-s1', name:'Taper · A — Manutenção', desc:'20 min leve', protocol:'5 min aquecimento / 20 min ritmo leve / 5 min volta', tip:'Manter as pernas ativas sem acumular fadiga.' },
-    { id:'run-w7-s2', name:'Taper · B — Véspera', desc:'10 min muito leve + alongamento', protocol:'10 min caminhada/trote leve / 15 min alongamento focado em panturrilha, quadril e isquiotibial', tip:'Última sessão antes da prova. Leve e relaxante.' },
+    {
+      id:'run-w7-s1', name:'Taper · A — Manutenção',
+      desc:'20 min leve · Manter pernas ativas',
+      pace:'Pace alvo: 8:30-9:30 min/km — deliberadamente mais lento que o normal',
+      fc:'FC alvo: 108-118 bpm — passeio com propósito',
+      structure:[
+        {phase:'Aquecimento', dur:'5 min', note:'Caminhada'},
+        {phase:'Corrida leve', dur:'20 min', note:'Ritmo de recuperação. Se parecer fácil demais, está certo.'},
+        {phase:'Volta à calma', dur:'5 min', note:'Caminhada + mobilidade de tornozelo e quadril'},
+      ],
+      tip:'Semana de taper: volume baixo, intensidade baixa. Você não melhora nos últimos dias — só se recupera. Resista à vontade de treinar mais.',
+      alert:''
+    },
+    {
+      id:'run-w7-s2', name:'Taper · B — Véspera da Prova',
+      desc:'10 min trote leve + alongamento',
+      pace:'Pace alvo: 9:00-10:00 min/km — mais caminhada do que corrida',
+      fc:'FC alvo: abaixo de 115 bpm',
+      structure:[
+        {phase:'Trote/caminhada', dur:'10 min', note:'Alternância livre de trote e caminhada. Apenas para ativar a circulação.'},
+        {phase:'Alongamento', dur:'15 min', note:'Panturrilha 60 seg cada lado · Isquiotibial 60 seg cada · Quadril flexor 45 seg · Glúteo figura 4 · Quadríceps em pé'},
+      ],
+      tip:'Hoje é para ativar, não cansar. Hidrate bem durante o dia. Durma cedo. Prepare o calçado e roupa com antecedência.',
+      alert:'Não coma nada muito diferente do habitual. Dieta carnívora normal. Evite comidas pesadas à noite.'
+    },
   ]},
 ];
 
@@ -1472,13 +1724,13 @@ function buildRunningSection() {
 function buildRunWeekCard(weekData, isCurrent) {
   var h = getHistory();
   var card = document.createElement('div'); card.className = 'run-week-card';
-  if (!isCurrent) card.style.opacity = '0.7';
+  if (!isCurrent) card.style.opacity = '0.75';
   var doneSessions = 0;
   for (var s = 0; s < weekData.sessions.length; s++) {
     for (var hi = 0; hi < h.length; hi++) { if (h[hi].workoutId === weekData.sessions[s].id) { doneSessions++; break; } }
   }
   card.innerHTML = '<div class="run-week-header">'
-    + '<div class="run-week-label">Semana ' + weekData.week + (isCurrent ? ' · Atual' : '') + '<\/div>'
+    + '<div class="run-week-label">Semana ' + weekData.week + (isCurrent ? ' · ATUAL' : '') + '<\/div>'
     + '<div class="run-week-title">' + weekData.label + '<\/div>'
     + '<div class="run-week-days">' + doneSessions + ' de ' + weekData.sessions.length + ' sessões concluídas<\/div>'
     + '<\/div>';
@@ -1487,46 +1739,149 @@ function buildRunWeekCard(weekData, isCurrent) {
     var done = false;
     for (var hi2 = 0; hi2 < h.length; hi2++) { if (h[hi2].workoutId === sess.id) { done = true; break; } }
     var row = document.createElement('div'); row.className = 'run-session-row';
-    (function(s) {
-      row.onclick = function() { startRunSession(s); };
-    })(sess);
-    row.innerHTML = '<div class="run-session-name">'
-      + (done ? '✅ ' : '▶ ')
-      + sess.name + '<\/div>'
-      + '<div class="run-session-desc">' + sess.desc + '<\/div>';
+    (function(s) { row.onclick = function() { openRunSessionDetail(s); }; })(sess);
+    var structurePreview = '';
+    if (sess.structure && sess.structure.length) {
+      var phases = [];
+      for (var pi = 0; pi < sess.structure.length; pi++) {
+        phases.push(sess.structure[pi].phase + ' ' + sess.structure[pi].dur);
+      }
+      structurePreview = phases.join(' → ');
+    }
+    row.innerHTML = '<div style="display:flex;align-items:center;gap:10px">'
+      + '<div style="flex:1">'
+        + '<div class="run-session-name">' + (done ? '✅ ' : '🏃 ') + sess.name + '<\/div>'
+        + '<div class="run-session-desc">' + sess.desc + '<\/div>'
+        + (sess.pace ? '<div style="font-size:11px;color:#27ae60;margin-top:3px">⚡ ' + sess.pace + '<\/div>' : '')
+        + (structurePreview ? '<div style="font-size:10px;color:#555;margin-top:3px">' + structurePreview + '<\/div>' : '')
+      + '<\/div>'
+      + '<div style="color:#555;font-size:18px;flex-shrink:0">›<\/div>'
+    + '<\/div>';
     card.appendChild(row);
   }
   return card;
 }
 
-function startRunSession(sess) {
-  // Build a workout-like object for the running session
+function openRunSessionDetail(sess) {
+  // Build detailed run session screen
+  var body = document.getElementById('workout-body'); 
+  // Navigate first
+  var currentWorkoutBak = currentWorkout;
   var runWorkout = {
-    id: sess.id,
-    name: sess.name,
-    day: 'Corrida',
-    type: 'cardio',
-    icon: '🏃',
-    desc: sess.desc,
-    exercises: [
-      { id: sess.id + '-main', name: sess.name, sets:1, reps:sess.desc, rest:0, note: sess.protocol + ' · ' + sess.tip }
-    ]
+    id: sess.id, name: sess.name, day: 'Corrida 5km', type: 'cardio', icon: '🏃',
+    desc: sess.desc, isRunSession: true, sess: sess, exercises: []
   };
-  sessionData = {}; sessionNote = ''; workoutStartTime = Date.now(); previewMode = false;
   currentWorkout = runWorkout;
+  document.getElementById('wo-title').textContent = '🏃 ' + sess.name;
+  document.getElementById('wo-date').textContent = sess.desc;
+  var cancelBtn = document.getElementById('cancel-workout-btn');
+  if (cancelBtn) cancelBtn.style.display = 'none';
+  // Build custom screen
+  body.innerHTML = '';
+  // Header
+  var hdr = document.createElement('div'); hdr.className = 'workout-header';
+  hdr.innerHTML = '<div class="workout-day-label">Corrida 5km · Semana ' + (sess.id.match(/w(\d)/) ? sess.id.match(/w(\d)/)[1] : '') + '<\/div>'
+    + '<div class="workout-title">' + sess.name + '<\/div>'
+    + '<div class="workout-meta">' + sess.desc + '<\/div>';
+  body.appendChild(hdr);
+  // Pace & FC block
+  if (sess.pace || sess.fc) {
+    var paceBlock = document.createElement('div');
+    paceBlock.style.cssText = 'margin:12px 20px;background:#111;border-radius:10px;padding:14px 16px';
+    paceBlock.innerHTML = (sess.pace ? '<div style="margin-bottom:8px"><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#27ae60;margin-bottom:3px">⚡ Pace Alvo<\/div><div style="font-size:13px;color:#e8e2d8;line-height:1.5">' + sess.pace + '<\/div><\/div>' : '')
+      + (sess.fc ? '<div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#c8a96e;margin-bottom:3px">❤️ Frequência Cardíaca<\/div><div style="font-size:13px;color:#e8e2d8;line-height:1.5">' + sess.fc + '<\/div><\/div>' : '');
+    body.appendChild(paceBlock);
+  }
+  // Structure block
+  if (sess.structure && sess.structure.length) {
+    var structLbl = document.createElement('div'); structLbl.className = 'ex-section-label'; structLbl.textContent = 'Estrutura da Sessão'; body.appendChild(structLbl);
+    for (var si = 0; si < sess.structure.length; si++) {
+      var ph = sess.structure[si];
+      var phRow = document.createElement('div');
+      phRow.style.cssText = 'margin:0 20px 8px;background:#171717;border:1px solid #2e2e2e;border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start';
+      phRow.innerHTML = '<div style="background:#222;border-radius:6px;padding:4px 8px;font-size:11px;font-weight:700;color:#c8a96e;white-space:nowrap;flex-shrink:0">' + ph.dur + '<\/div>'
+        + '<div><div style="font-size:13px;font-weight:700;color:#e8e2d8;margin-bottom:2px">' + ph.phase + '<\/div>'
+        + '<div style="font-size:12px;color:#888;line-height:1.5">' + ph.note + '<\/div><\/div>';
+      body.appendChild(phRow);
+    }
+  }
+  // Tip block
+  if (sess.tip) {
+    var tipBlock = document.createElement('div');
+    tipBlock.style.cssText = 'margin:8px 20px';
+    tipBlock.innerHTML = '<div class="ex-note-text">💡 ' + sess.tip + '<\/div>';
+    body.appendChild(tipBlock);
+  }
+  // Alert block
+  if (sess.alert) {
+    var alertBlock = document.createElement('div');
+    alertBlock.style.cssText = 'margin:0 20px 8px;background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.25);border-radius:10px;padding:12px 14px;font-size:12px;color:#ccc;line-height:1.5';
+    alertBlock.innerHTML = '⚠️ ' + sess.alert;
+    body.appendChild(alertBlock);
+  }
+  // Note input
+  var noteArea = document.createElement('div'); noteArea.className = 'note-area';
+  var todayStr = new Date().toISOString().split('T')[0];
+  noteArea.innerHTML = '<div class="note-area-label">📅 Data<\/div>'
+    + '<input type="date" id="session-date-input" class="session-note-input" style="min-height:0;padding:10px 14px;font-size:15px;color:#e8e2d8;background:#222;border:1px solid #333;border-radius:8px;width:100%" value="' + todayStr + '" max="' + todayStr + '">'
+    + '<div class="note-area-label" style="margin-top:4px">⏱ Duração real (minutos)<\/div>'
+    + '<input type="number" inputmode="numeric" id="session-dur-input" class="session-note-input" style="min-height:0;padding:10px 14px;font-size:15px" placeholder="Ex: 32">'
+    + '<div class="note-area-label" style="margin-top:4px">📝 Nota (como foi?)<\/div>'
+    + '<textarea class="session-note-input" placeholder="Pace real, sensações, condições..." id="session-note-input"><\/textarea>';
+  body.appendChild(noteArea);
+  // Start button
+  var fin = document.createElement('div'); fin.className = 'finish-area';
+  fin.innerHTML = '<button class="finish-btn" onclick="startRunSessionActive()">▶ Iniciar Sessão<\/button>';
+  body.appendChild(fin);
+  navigate('home', 'workout');
+}
+
+function startRunSessionActive() {
+  var runSess = currentWorkout ? currentWorkout.sess : null;
+  if (!runSess) { goHome(); return; }
+  sessionData = {}; sessionNote = ''; workoutStartTime = Date.now(); previewMode = false;
   requestNotifPermission(); saveSession();
-  document.getElementById('wo-title').textContent = sess.name;
-  document.getElementById('wo-date').textContent = fmtDate(new Date());
   var cancelBtn = document.getElementById('cancel-workout-btn');
   if (cancelBtn) cancelBtn.style.display = 'block';
-  buildWorkoutScreen(false);
-  navigate('home', 'workout');
+  document.getElementById('wo-date').textContent = fmtDate(new Date());
+  // Re-render with timer active and finish button
+  var finAreas = document.querySelectorAll('.finish-area');
+  for (var i = 0; i < finAreas.length; i++) {
+    finAreas[i].innerHTML = '<button class="finish-btn" onclick="finishRunSession()">✅ Finalizar Sessão<\/button>';
+  }
   clearInterval(sessionTimer);
   sessionTimer = setInterval(function() {
     var el = document.getElementById('wo-timer-mini');
     if (el) el.textContent = fmtSecs(Math.floor((Date.now() - workoutStartTime) / 1000));
   }, 1000);
 }
+
+function finishRunSession() {
+  clearInterval(sessionTimer);
+  var runSess = currentWorkout ? currentWorkout.sess : null;
+  if (!runSess) { goHome(); return; }
+  var noteEl = document.getElementById('session-note-input');
+  var noteVal = noteEl ? noteEl.value : '';
+  var dateEl = document.getElementById('session-date-input');
+  var sessionDate = (dateEl && dateEl.value) ? new Date(dateEl.value + 'T12:00:00').toISOString() : new Date().toISOString();
+  var durEl = document.getElementById('session-dur-input');
+  var manualDur = durEl ? parseInt(durEl.value) : NaN;
+  var dur = (!isNaN(manualDur) && manualDur > 0) ? manualDur : Math.floor((Date.now() - workoutStartTime) / 60000);
+  var entry = {
+    id: Date.now(), workoutId: runSess.id, workoutName: runSess.name,
+    date: sessionDate, duration: dur, sets: {}, note: noteVal,
+    completedEx: 1, totalEx: 1
+  };
+  var h = getHistory();
+  h.unshift(entry);
+  h.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+  saveHistory(h);
+  clearSession();
+  showToast('Sessão de corrida salva! 🏃 ' + dur + ' min');
+  goHome();
+}
+
+function startRunSession(sess) { openRunSessionDetail(sess); }
 
 function buildHome() {
   try {
@@ -1596,7 +1951,7 @@ var sessionTimer = null, restTimer = null, restEndTime = null, restTotalSec = 0;
 var previewMode = false;
 
 function previewWorkout(id) {
-  var all = PROGRAM.strength.concat(PROGRAM.cardio);
+  var all = PROGRAM.strength.concat(PROGRAM.cardio).concat(HOTEL.strength);
   for (var i = 0; i < all.length; i++) { if (all[i].id === id) { currentWorkout = all[i]; break; } }
   if (!currentWorkout) return;
   sessionData = {}; previewMode = true;
@@ -1609,7 +1964,7 @@ function previewWorkout(id) {
 }
 
 function startWorkout(id) {
-  var all = PROGRAM.strength.concat(PROGRAM.cardio);
+  var all = PROGRAM.strength.concat(PROGRAM.cardio).concat(HOTEL.strength);
   for (var i = 0; i < all.length; i++) { if (all[i].id === id) { currentWorkout = all[i]; break; } }
   if (!currentWorkout) return;
   sessionData = {}; sessionNote = ''; workoutStartTime = Date.now(); previewMode = false;
